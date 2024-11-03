@@ -1,8 +1,45 @@
+from entities.Autor import Autor
+from entities.Libro import Libro
+from entities.Usuario import Usuario
+from entities.Prestamo import Prestamo
+from datetime import datetime
+
 from views.menu import abrir_ventana
 
 def main():
-    print("TP 1 - DESARROLLO DE APLICACIONES ORIENTADAS A OBJETOS")
-    abrir_ventana()  # Llama a la función para abrir la ventana del menú
+    abrir_ventana()
 
-if __name__ == '__main__':
+    try:
+        # Ejemplo de registro de autor
+        autor = Autor("Gabriel", "García Márquez", "Colombiano")
+        autor.guardar()
+        print("Autor guardado exitosamente.")
+    except Exception as e:
+        print(f"Error al guardar autor: {e}")
+
+    try:
+        # Ejemplo de registro de libro
+        libro = Libro("9781234567897", "Cien Años de Soledad", "Novela", 1967, 1, 3)
+        libro.guardar()
+        print("Libro guardado exitosamente.")
+    except Exception as e:
+        print(f"Error al guardar libro: {e}")
+
+    try:
+        # Ejemplo de registro de usuario
+        usuario = Usuario("Juan", "Pérez", "estudiante", "Calle Falsa 123", "123456789")
+        usuario.guardar()
+        print("Usuario guardado exitosamente.")
+    except Exception as e:
+        print(f"Error al guardar usuario: {e}")
+
+    try:
+        # Ejemplo de préstamo de libro
+        prestamo = Prestamo("Juan", "9781234567897", datetime.now().strftime("%Y-%m-%d"), "2024-12-01")
+        prestamo.guardar()
+        print("Préstamo guardado exitosamente.")
+    except Exception as e:
+        print(f"Error al guardar préstamo: {e}")
+
+if __name__ == "__main__":
     main()
