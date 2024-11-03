@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-from entities.Usuario import Usuario  # Asegúrate de que esta ruta sea correcta
+from entities.Usuario import Usuario
 
 
 def abrir_ventana_registro_usuarios():
@@ -58,11 +58,8 @@ def abrir_ventana_registro_usuarios():
             return
 
         # Crear una instancia del usuario
-        nuevo_usuario = Usuario(id=None, nombre=nombre, apellido=apellido, tipo_usuario=tipo, direccion=direccion,
-                                telefono=telefono)
-
-        # Aquí puedes añadir la lógica para guardar el usuario en la base de datos
-        # Por ejemplo: guardar_usuario_en_db(nuevo_usuario)
+        usuario = Usuario(nombre=nombre, apellido=apellido, tipo_usuario=tipo, direccion=direccion, telefono=telefono)
+        usuario.guardar()
 
         # Mostrar un mensaje de éxito
         messagebox.showinfo("Éxito", "Usuario registrado correctamente.")
@@ -77,7 +74,7 @@ def abrir_ventana_registro_usuarios():
     # Botón para registrar el usuario
     boton_registrar = tk.Button(
         ventana,
-        text="Registrar Autor",
+        text="Registrar Usuario",
         command=registrar_usuario,
         bg="#008B8B",  # Color de fondo del botón
         fg="white",    # Color del texto del botón

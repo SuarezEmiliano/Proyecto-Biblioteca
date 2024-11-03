@@ -2,7 +2,7 @@ import sqlite3
 
 class Prestamo:
     def __init__(self, id_usuario, isbn, fecha_prestamo, fecha_devolucion):
-        self.id_usuario = id_usuario  # Cambia usuario a id_usuario
+        self.id_usuario = id_usuario
         self.isbn = isbn
         self.fecha_prestamo = fecha_prestamo
         self.fecha_devolucion = fecha_devolucion

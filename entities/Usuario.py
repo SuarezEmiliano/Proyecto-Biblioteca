@@ -18,3 +18,11 @@ class Usuario:
         """, (self.nombre, self.apellido, self.tipo_usuario, self.direccion, self.telefono))
         conn.commit()
         conn.close()
+
+    def obtener_usuarios():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT id_usuario, nombre FROM usuarios")
+        usuarios = cursor.fetchall()
+        conn.close()
+        return usuarios

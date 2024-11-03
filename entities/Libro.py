@@ -6,7 +6,7 @@ class Libro:
         self.titulo = titulo
         self.genero = genero
         self.anio_publicacion = anio_publicacion
-        self.id_autor = id_autor  # Asegúrate de usar id_autor
+        self.id_autor = id_autor
         self.cantidad_disponible = cantidad_disponible
 
     def guardar(self):
@@ -19,12 +19,10 @@ class Libro:
         conn.commit()
         conn.close()
 
-
-    @staticmethod
-    def consultar_disponibilidad(codigo):
+    def obtener_libros_disponibles():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT cantidad_disponible FROM libros WHERE codigo = ?", (codigo,))
-        cantidad = cursor.fetchone()
+        cursor.execute("SELECT isbn, titulo FROM libros WHERE cantidad_disponible > 0")
+        libros = cursor.fetchall()
         conn.close()
-        return cantidad[0] if cantidad else 0
+        return libros

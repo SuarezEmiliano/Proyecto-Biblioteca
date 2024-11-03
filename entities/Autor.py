@@ -13,3 +13,11 @@ class Autor:
                        (self.nombre, self.apellido, self.nacionalidad))
         conn.commit()
         conn.close()
+
+    def obtener_autores():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT id_autor, nombre FROM autores")
+        autores = cursor.fetchall()
+        conn.close()
+        return autores
