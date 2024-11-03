@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-from entities.Autor import Autor  # Asegúrate de que esta ruta sea correcta
-
+from entities.Autor import Autor
 
 def abrir_ventana_registro_autores():
     ventana = tk.Toplevel()
@@ -45,13 +44,14 @@ def abrir_ventana_registro_autores():
             return
 
         # Crear una instancia del usuario
-        nuevo_usuario = Autor(id=None, nombre=nombre, apellido=apellido, nacionalidad=nacionalidad)
+        autor = Autor(nombre=nombre, apellido=apellido, nacionalidad=nacionalidad)
+        autor.guardar()
 
         # Aquí puedes añadir la lógica para guardar el usuario en la base de datos
         # Por ejemplo: guardar_autor_en_db(nuevo_autor)
 
         # Mostrar un mensaje de éxito
-        messagebox.showinfo("Éxito", "Usuario registrado correctamente.")
+        messagebox.showinfo("Éxito", "Autor registrado con éxito!")
 
         # Limpiar los campos
         entry_nombre.delete(0, tk.END)

@@ -10,14 +10,6 @@ def main():
     abrir_ventana()
 
     try:
-        # Ejemplo de registro de autor
-        autor = Autor("Gabriel", "García Márquez", "Colombiano")
-        autor.guardar()
-        print("Autor guardado exitosamente.")
-    except Exception as e:
-        print(f"Error al guardar autor: {e}")
-
-    try:
         # Ejemplo de registro de libro
         libro = Libro("9781234567897", "Cien Años de Soledad", "Novela", 1967, 1, 3)
         libro.guardar()
