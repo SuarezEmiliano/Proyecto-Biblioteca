@@ -29,7 +29,7 @@ def abrir_ventana():
     ventana = tk.Tk()
     ventana.title("Biblioteca - Menú Principal")
     ventana.geometry("400x500")
-    ventana.configure(bg="#f0f0f0")  # Fondo claro
+    ventana.configure(bg="#2c3e50")  # Color de fondo más oscuro
     ventana.resizable(False, False)  # No permitir redimensionar
 
     # Establecer una fuente personalizada
@@ -37,11 +37,11 @@ def abrir_ventana():
     fuente_boton = tkFont.Font(family="Helvetica", size=12)
 
     # Etiqueta de título
-    label_titulo = tk.Label(ventana, text="Sistema de Biblioteca", font=fuente_titulo, bg="#f0f0f0")
+    label_titulo = tk.Label(ventana, text="Sistema de Biblioteca", font=fuente_titulo, bg="#2c3e50", fg="#ecf0f1")
     label_titulo.pack(pady=20)
 
     # Crear un marco para los botones
-    frame_botones = tk.Frame(ventana, bg="#f0f0f0")
+    frame_botones = tk.Frame(ventana, bg="#34495e")  # Color de fondo del marco
     frame_botones.pack(pady=10)
 
     # Crear botones para cada opción con un diseño mejorado
@@ -60,8 +60,8 @@ def abrir_ventana():
             frame_botones,
             text=opcion,
             font=fuente_boton,
-            bg="#008B8B",
-            fg="white",
+            bg="#008B8B",  # Color de fondo de los botones
+            fg="white",    # Color del texto
             width=25,
             height=2,
             relief=tk.RAISED,
@@ -74,7 +74,7 @@ def abrir_ventana():
         ventana,
         text="Salir",
         font=fuente_boton,
-        bg="#f44336",
+        bg="#f44336",  # Color de fondo del botón de salir
         fg="white",
         width=10,
         height=1,
