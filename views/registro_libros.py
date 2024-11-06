@@ -7,39 +7,41 @@ def abrir_ventana_registro_libros():
     ventana = tk.Toplevel()
     ventana.title("Registro de Libros")
     ventana.geometry("400x400")
+    ventana.configure(bg="#2c3e50")  # Fondo de la ventana
 
     # Obtener autores de la base de datos
     autores = Autor.obtener_autores()
     lista_autores = [(autor[0], autor[1]) for autor in autores]
 
     # Crear un marco para el formulario
-    frame = tk.Frame(ventana, padx=20, pady=20)
+    frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
     frame.pack(pady=20)
 
-    tk.Label(frame, text="Registro de Libros", font=("Helvetica", 18)).grid(row=0, column=0, columnspan=2, pady=10)
+    tk.Label(frame, text="Registro de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(row=0, column=0, columnspan=2, pady=10)
 
-    tk.Label(frame, text="ISBN:").grid(row=1, column=0, sticky="w")
-    entry_isbn = tk.Entry(frame, width=30)
+    # Campos de entrada con estilo
+    tk.Label(frame, text="ISBN:", bg="#34495e", fg="#ecf0f1").grid(row=1, column=0, sticky="w")
+    entry_isbn = tk.Entry(frame, width=30, font=("Helvetica", 12))
     entry_isbn.grid(row=1, column=1, pady=5)
 
-    tk.Label(frame, text="Título:").grid(row=2, column=0, sticky="w")
-    entry_titulo = tk.Entry(frame, width=30)
+    tk.Label(frame, text="Título:", bg="#34495e", fg="#ecf0f1").grid(row=2, column=0, sticky="w")
+    entry_titulo = tk.Entry(frame, width=30, font=("Helvetica", 12))
     entry_titulo.grid(row=2, column=1, pady=5)
 
-    tk.Label(frame, text="Género:").grid(row=3, column=0, sticky="w")
-    entry_genero = tk.Entry(frame, width=30)
+    tk.Label(frame, text="Género:", bg="#34495e", fg="#ecf0f1").grid(row=3, column=0, sticky="w")
+    entry_genero = tk.Entry(frame, width=30, font=("Helvetica", 12))
     entry_genero.grid(row=3, column=1, pady=5)
 
-    tk.Label(frame, text="Año de Publicación:").grid(row=4, column=0, sticky="w")
-    entry_anio_publicacion = tk.Entry(frame, width=30)
+    tk.Label(frame, text="Año de Publicación:", bg="#34495e", fg="#ecf0f1").grid(row=4, column=0, sticky="w")
+    entry_anio_publicacion = tk.Entry(frame, width=30, font=("Helvetica", 12))
     entry_anio_publicacion.grid(row=4, column=1, pady=5)
 
-    tk.Label(frame, text="Autor:").grid(row=5, column=0, sticky="w")
-    combobox_autores = ttk.Combobox(frame, values=[f"{autor[0]} - {autor[1]}" for autor in lista_autores], state="readonly")
+    tk.Label(frame, text="Autor:", bg="#34495e", fg="#ecf0f1").grid(row=5, column=0, sticky="w")
+    combobox_autores = ttk.Combobox(frame, values=[f"{autor[0]} - {autor[1]}" for autor in lista_autores], state="readonly", font=("Helvetica", 12))
     combobox_autores.grid(row=5, column=1, pady=5)
 
-    tk.Label(frame, text="Cantidad Disponible:").grid(row=6, column=0, sticky="w")
-    entry_cantidad_disponible = tk.Entry(frame, width=30)
+    tk.Label(frame, text="Cantidad Disponible:", bg="#34495e", fg="#ecf0f1").grid(row=6, column=0, sticky="w")
+    entry_cantidad_disponible = tk.Entry(frame, width=30, font=("Helvetica", 12))
     entry_cantidad_disponible.grid(row=6, column=1, pady=5)
 
     def registrar_libro():
@@ -57,7 +59,7 @@ def abrir_ventana_registro_libros():
         # Obtener ID del autor seleccionado
         id_autor = autor_seleccionado.split(" - ")[0]
 
-        # Aquí puedes crear la instancia del libro y guardar en la base de datos
+        # Crear la instancia del libro y guardar en la base de datos
         libro = Libro(isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible)
         libro.guardar()
 
@@ -71,7 +73,17 @@ def abrir_ventana_registro_libros():
         entry_cantidad_disponible.delete(0, tk.END)
         combobox_autores.set('')
 
-    boton_registrar = tk.Button(ventana, text="Registrar Libro", command=registrar_libro)
+    # Botón de registro con estilo
+    boton_registrar = tk.Button(
+        ventana,
+        text="Registrar Libro",
+        command=registrar_libro,
+        bg="#008B8B",  # Color de fondo del botón
+        fg="white",    # Color del texto del botón
+        relief=tk.RAISED,
+        width=25,      # Ancho del botón, consistente con el estilo anterior
+        height=2       # Altura del botón, consistente con el estilo anterior
+    )
     boton_registrar.pack(pady=20)
 
     ventana.mainloop()
