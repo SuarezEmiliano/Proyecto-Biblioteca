@@ -16,3 +16,11 @@ class Prestamo:
         ''', (self.id_usuario, self.isbn, self.fecha_prestamo, self.fecha_devolucion))
         conn.commit()
         conn.close()
+
+    def obtener_prestamos():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT id_usuario, isbn FROM prestamos')
+        prestamos = cursor.fetchall()
+        conn.close()
+        return prestamos

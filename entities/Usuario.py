@@ -26,3 +26,15 @@ class Usuario:
         usuarios = cursor.fetchall()
         conn.close()
         return usuarios
+
+    def obtener_nombre_apellido(id_usuario):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT nombre, apellido FROM usuarios WHERE id_usuario = ?", (id_usuario,))
+        usuario = cursor.fetchone()  # Solo obtenemos un registro
+        conn.close()
+
+        if usuario:
+            return usuario
+        else:
+            return None

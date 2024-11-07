@@ -26,3 +26,15 @@ class Libro:
         libros = cursor.fetchall()
         conn.close()
         return libros
+
+    def obtener_libro(isbn):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT titulo FROM libros WHERE isbn = ?", (isbn,))
+        libro = cursor.fetchone()
+        conn.close()
+
+        if libro:
+            return libro
+        else:
+            return None
