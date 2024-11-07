@@ -50,7 +50,7 @@ def abrir_ventana_prestamo_libros():
         if cal_fecha_prestamo is None:
             cal_fecha_prestamo = Calendar(frame, selectmode='day', date_pattern='yyyy-mm-dd')
             cal_fecha_prestamo.grid(row=5, column=1, pady=5)
-            def seleccionar_fecha_prestamo():
+            def seleccionar_fecha_prestamo(event):
                 entry_fecha_prestamo.delete(0, tk.END)
                 entry_fecha_prestamo.insert(0, cal_fecha_prestamo.get_date())
                 cal_fecha_prestamo.grid_forget()
