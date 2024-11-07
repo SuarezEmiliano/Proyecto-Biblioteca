@@ -4,9 +4,9 @@ from entities.Prestamo import Prestamo
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.backends.backend_pdf import PdfPages  # Importa PdfPages
-from fpdf import FPDF  # Importa la librería FPDF
-
+from matplotlib.backends.backend_pdf import PdfPages
+from fpdf import FPDF
+from datetime import datetime
 
 def mostrar_grafico(libros):
     # Convertir los datos en un DataFrame
@@ -23,11 +23,10 @@ def mostrar_grafico(libros):
 
     # Guardar el gráfico como un archivo PDF
     with PdfPages('reporte_libros_prestados.pdf') as pdf:
-        pdf.savefig()  # Guarda la figura actual en el archivo PDF
-        plt.close()  # Cierra la figura para liberar memoria
+        pdf.savefig()
+        plt.close()
 
-    messagebox.showinfo("Reporte Generado", "El gráfico ha sido guardado como un archivo PDF.")
-
+    mostrar_confirmacion()
 
 def generar_pdf_prestamos_vencidos(prestamos):
     # Crear el documento PDF
@@ -40,37 +39,103 @@ def generar_pdf_prestamos_vencidos(prestamos):
 
     # Agregar los datos de los préstamos vencidos
     for prestamo in prestamos:
-        pdf.ln(10)  # Salto de línea
+        pdf.ln(10)
         pdf.cell(200, 10, txt=f"Usuario: {prestamo[0]} | Libro: {prestamo[1]} | Fecha préstamo: {prestamo[2]} | Fecha devolución: {prestamo[3]}", ln=True)
 
     # Guardar el archivo PDF
     pdf.output("reporte_prestamos_vencidos.pdf")
-    messagebox.showinfo("Reporte Generado", "El reporte de préstamos vencidos ha sido guardado como PDF.")
-
-
+    mostrar_confirmacion()
+    
 def generar_pdf_usuarios_mas_prestamos(usuarios):
     # Crear el documento PDF
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
 
-    # Título del reporte
+    # Establecer el estilo de fuente para el encabezado
+    pdf.set_font("Arial", style='B', size=14)
+
+    # Encabezado (puedes agregar un logo o un texto adicional aquí si es necesario)
+    pdf.cell(200, 10, txt="Biblioteca Alejandría", ln=True, align='C')
+    pdf.ln(5)
+
+    # Dibuja la línea debajo del encabezado
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+
+    pdf.ln(10)
+
+    # Título del reporte (centrado, en negrita y más grande)
+    pdf.set_font("Arial", style='B', size=16)
     pdf.cell(200, 10, txt="Reporte de Usuarios con Más Préstamos", ln=True, align='C')
+    pdf.ln(10)
 
-    # Agregar los datos de los usuarios
+    # Subtítulo (en negrita)
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Detalle", ln=True, align='L')
+    pdf.ln(5)
+
+    # Crear los encabezados de la tabla con un formato profesional
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.set_fill_color(0, 139, 139)
+
+    # Calcular el centro de la página para la tabla
+    ancho_tabla = 140
+    pdf.set_x((210 - ancho_tabla) / 2)
+
+    # Encabezados de la tabla
+    pdf.cell(70, 10, txt="Usuario", border=1, align='C', fill=True)
+    pdf.cell(70, 10, txt="Cantidad de Préstamos", border=1, align='C', fill=True)
+    pdf.ln()
+
+    # Cambiar a una fuente normal para los datos
+    pdf.set_font("Arial", size=10)
+
+    # Agregar los datos de los usuarios en las filas de la tabla
     for usuario in usuarios:
-        pdf.ln(10)  # Salto de línea
-        pdf.cell(200, 10, txt=f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}", ln=True)
+        pdf.set_x((210 - ancho_tabla) / 2) 
+
+        pdf.cell(70, 10, txt=f"{usuario[0]} {usuario[1]}", border=1, align='C')
+        pdf.cell(70, 10, txt=str(usuario[2]), border=1, align='C')
+        pdf.ln()
+
+    # Pie de página
+    pdf.set_y(-30)
+    pdf.set_font("Arial", style='I', size=8)
+
+    # Agregar la fecha y hora al pie de página
+    pdf.cell(0, 10, txt=f"Fecha de generación: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", ln=True, align='C')
+
+    # Mensaje de derechos reservados
+    pdf.cell(0, 10, txt="Reporte generado automáticamente. Todos los derechos reservados.", align='C')
 
     # Guardar el archivo PDF
     pdf.output("reporte_usuarios_mas_prestamos.pdf")
-    messagebox.showinfo("Reporte Generado", "El reporte de usuarios con más préstamos ha sido guardado como PDF.")
+    mostrar_confirmacion()
 
+def mostrar_confirmacion():
+    confirmacion = tk.Toplevel()
+    confirmacion.title("Confirmación")
+    confirmacion.geometry("400x200+750+240")
+    confirmacion.configure(bg="#2c3e50")
+
+    tk.Label(confirmacion, text="Reporte Generado con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
+    tk.Label(confirmacion, text="El reporte ha sido guardado como PDF.", font=("Helvetica", 12), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
+
+    # Botón para cerrar la ventana de confirmación
+    tk.Button(
+        confirmacion,
+        text="Cerrar",
+        command=confirmacion.destroy,
+        bg="#008B8B",
+        fg="white",
+        font=("Helvetica", 12),
+        width=12,
+        height=2
+    ).pack(pady=8)
 
 def abrir_ventana_reportes():
     ventana = tk.Toplevel()
     ventana.title("Reportes")
-    ventana.geometry("600x600")
+    ventana.geometry("600x600+750+240")
     ventana.configure(bg="#2c3e50")
 
     # Crear un marco para el formulario
@@ -84,7 +149,7 @@ def abrir_ventana_reportes():
     # Listbox para mostrar los resultados (inicialmente oculto)
     listbox_resultados = tk.Listbox(ventana, width=80, height=15, font=("Helvetica", 10))
     listbox_resultados.pack(pady=20)
-    listbox_resultados.pack_forget()  # Ocultar el Listbox al principio
+    listbox_resultados.pack_forget()
 
     # Función para mostrar los reportes
     def generar_reporte():
@@ -107,7 +172,7 @@ def abrir_ventana_reportes():
                 # Generar el PDF para préstamos vencidos
                 generar_pdf_prestamos_vencidos(prestamos)
             else:
-                messagebox.showinfo("Prestamos Vencidos", "No hay prestamos vencidos.")
+                messagebox.showinfo("Préstamos Vencidos", "No hay prestamos vencidos.")
 
         elif reporte_seleccionado == "Libros más prestados el último mes":
             libros = Prestamo.obtener_libros_mas_prestados()
@@ -147,7 +212,7 @@ def abrir_ventana_reportes():
         "Prestamos vencidos",
         "Libros más prestados el último mes",
         "Usuarios con más préstamos de libros"
-    ], state="readonly")
+    ], state="readonly", width=40)
     combobox_reportes.grid(row=1, column=1, pady=5)
 
     # Botón para generar el reporte
