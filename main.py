@@ -1,5 +1,3 @@
-
-
 from views.menu import abrir_ventana
 
 def main():

@@ -27,10 +27,10 @@ def abrir_ventana():
 
     # Crear la ventana del menú
     ventana = tk.Tk()
-    ventana.title("Biblioteca - Menú Principal")
-    ventana.geometry("400x500")
-    ventana.configure(bg="#2c3e50")  # Color de fondo más oscuro
-    ventana.resizable(False, False)  # No permitir redimensionar
+    ventana.title("ALEJANDRÍA - Menú Principal")
+    ventana.geometry("400x550+750+240")
+    ventana.configure(bg="#2c3e50")
+    ventana.resizable(False, False)
 
     # Establecer una fuente personalizada
     fuente_titulo = tkFont.Font(family="Helvetica", size=16, weight="bold")
@@ -41,7 +41,7 @@ def abrir_ventana():
     label_titulo.pack(pady=20)
 
     # Crear un marco para los botones
-    frame_botones = tk.Frame(ventana, bg="#34495e")  # Color de fondo del marco
+    frame_botones = tk.Frame(ventana, bg="#34495e")
     frame_botones.pack(pady=10)
 
     # Crear botones para cada opción con un diseño mejorado
@@ -60,8 +60,8 @@ def abrir_ventana():
             frame_botones,
             text=opcion,
             font=fuente_boton,
-            bg="#008B8B",  # Color de fondo de los botones
-            fg="white",    # Color del texto
+            bg="#008B8B",
+            fg="white",
             width=25,
             height=2,
             relief=tk.RAISED,
@@ -74,7 +74,7 @@ def abrir_ventana():
         ventana,
         text="Salir",
         font=fuente_boton,
-        bg="#f44336",  # Color de fondo del botón de salir
+        bg="#f44336",
         fg="white",
         width=10,
         height=1,

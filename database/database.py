@@ -52,8 +52,8 @@ def crear_tablas():
             id_usuario INTEGER,
             isbn TEXT,
             fecha_prestamo TEXT,
-            fecha_devolucion_estimada TEXT,
-            fecha_devolucion_real TEXT,
+            fecha_devolucion_estimada DATE,
+            fecha_devolucion_real DATE,
             FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario),
             FOREIGN KEY(isbn) REFERENCES libros(isbn)
         )
