@@ -1,0 +1,11 @@
+1 - Clonar el repositorio del proyecto
+2 - Instalar bibliotecas requeridas para la ejecución del proyecto, comandos:
+	-sudo apt-get install python3-tk
+	-pip install tkcalendar
+	-pip install seaborn
+	-pip install matplotlib
+	-pip install pandas
+	-pip install fpdf
+3- Situarse en el modulo main y ejecutar el proyecto.
+
+
