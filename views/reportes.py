@@ -4,9 +4,9 @@ from entities.Prestamo import Prestamo
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.backends.backend_pdf import PdfPages  # Importa PdfPages
-from fpdf import FPDF  # Importa la librería FPDF
-
+from matplotlib.backends.backend_pdf import PdfPages
+from fpdf import FPDF
+from datetime import datetime
 
 def mostrar_grafico(libros):
     # Convertir los datos en un DataFrame
@@ -52,15 +52,62 @@ def generar_pdf_usuarios_mas_prestamos(usuarios):
     # Crear el documento PDF
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
 
-    # Título del reporte
+    # Establecer el estilo de fuente para el encabezado
+    pdf.set_font("Arial", style='B', size=14)
+
+    # Encabezado (puedes agregar un logo o un texto adicional aquí si es necesario)
+    pdf.cell(200, 10, txt="Biblioteca Alejandría", ln=True, align='C')  # Ejemplo de encabezado
+    pdf.ln(5)  # Espacio después del encabezado
+
+    # Dibuja la línea debajo del encabezado
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Dibuja una línea horizontal desde x=10 hasta x=200
+
+    pdf.ln(10)  # Espacio después de la línea para separar del título
+
+    # Título del reporte (centrado, en negrita y más grande)
+    pdf.set_font("Arial", style='B', size=16)
     pdf.cell(200, 10, txt="Reporte de Usuarios con Más Préstamos", ln=True, align='C')
+    pdf.ln(10)  # Espacio después del título
 
-    # Agregar los datos de los usuarios
+    # Subtítulo (en negrita)
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Detalle", ln=True, align='L')
+    pdf.ln(5)  # Espacio después del subtítulo
+
+    # Crear los encabezados de la tabla con un formato profesional
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.set_fill_color(0, 139, 139)  # Color de fondo para las celdas del encabezado
+
+    # Calcular el centro de la página para la tabla
+    ancho_tabla = 140  # Ancho total de la tabla (ancho de las 2 columnas)
+    pdf.set_x((210 - ancho_tabla) / 2)  # Centramos la tabla en la página
+
+    # Encabezados de la tabla
+    pdf.cell(70, 10, txt="Usuario", border=1, align='C', fill=True)
+    pdf.cell(70, 10, txt="Cantidad de Préstamos", border=1, align='C', fill=True)
+    pdf.ln()  # Salto de línea para los encabezados de la tabla
+
+    # Cambiar a una fuente normal para los datos
+    pdf.set_font("Arial", size=10)
+
+    # Agregar los datos de los usuarios en las filas de la tabla
     for usuario in usuarios:
-        pdf.ln(10)  # Salto de línea
-        pdf.cell(200, 10, txt=f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}", ln=True)
+        pdf.set_x((210 - ancho_tabla) / 2)  # Reajustamos la posición X para centrar las filas
+
+        pdf.cell(70, 10, txt=f"{usuario[0]} {usuario[1]}", border=1, align='C')
+        pdf.cell(70, 10, txt=str(usuario[2]), border=1, align='C')
+        pdf.ln()  # Salto de línea después de cada fila
+
+    # Pie de página
+    pdf.set_y(-30)  # Colocamos el pie de página un poco más arriba para que haya espacio
+    pdf.set_font("Arial", style='I', size=8)
+
+    # Agregar la fecha y hora al pie de página
+    pdf.cell(0, 10, txt=f"Fecha de generación: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", ln=True, align='C')
+
+    # Mensaje de derechos reservados
+    pdf.cell(0, 10, txt="Reporte generado automáticamente. Todos los derechos reservados.", align='C')
 
     # Guardar el archivo PDF
     pdf.output("reporte_usuarios_mas_prestamos.pdf")
