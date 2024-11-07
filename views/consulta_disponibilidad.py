@@ -5,7 +5,7 @@ from entities.Libro import Libro
 def abrir_ventana_consulta_disponibilidad():
     ventana = tk.Toplevel()
     ventana.title("Consulta de Disponibilidad")
-    ventana.geometry("400x400+750+240")
+    ventana.geometry("+750+300")
     ventana.configure(bg="#2c3e50")
     ventana.resizable(False, False)
 

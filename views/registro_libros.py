@@ -7,9 +7,10 @@ import re
 def abrir_ventana_registro_libros():
     ventana = tk.Toplevel()
     ventana.title("Registro de Libros")
-    ventana.geometry("500x500+750+240")
+    ventana.geometry("+750+300")
     ventana.configure(bg="#2c3e50")
     ventana.resizable(False, False)
+
     # Obtener autores de la base de datos
     autores = Autor.obtener_autores()
     lista_autores = [(autor[0], autor[1]) for autor in autores]
@@ -63,6 +64,7 @@ def abrir_ventana_registro_libros():
     label_error_cantidad.grid(row=12, column=1, sticky="w")
     label_error_cantidad.grid_remove()
 
+    # Funciones de validación
     def validar_isbn(isbn):
         return len(isbn) == 13 and isbn.isdigit()
 
@@ -83,7 +85,6 @@ def abrir_ventana_registro_libros():
 
         tk.Label(confirmacion, text="Libro registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
 
-        # Botón para cerrar la ventana de confirmación
         tk.Button(
             confirmacion,
             text="Cerrar",
@@ -146,19 +147,14 @@ def abrir_ventana_registro_libros():
             libro = Libro(isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible)
             libro.guardar()
 
-            # Mostrar la ventana de confirmación personalizada
             mostrar_confirmacion()
 
-            # Limpiar los campos
             entry_isbn.delete(0, tk.END)
             entry_titulo.delete(0, tk.END)
             entry_genero.delete(0, tk.END)
             entry_anio_publicacion.delete(0, tk.END)
             entry_cantidad_disponible.delete(0, tk.END)
             combobox_autores.set('')
-
-            # Cerrar la ventana de registro de libro
-            ventana.destroy()
 
     # Botón de registro
     boton_registrar = tk.Button(
@@ -167,7 +163,7 @@ def abrir_ventana_registro_libros():
         command=registrar_libro,
         bg="#008B8B",
         fg="white",
-        relief=tk.RAISED,
+        font=("Helvetica", 12),
         width=25,
         height=2
     )

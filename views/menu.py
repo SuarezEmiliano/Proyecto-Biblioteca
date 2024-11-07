@@ -37,7 +37,7 @@ def abrir_ventana():
     fuente_boton = tkFont.Font(family="Helvetica", size=12)
 
     # Etiqueta de título
-    label_titulo = tk.Label(ventana, text="Sistema de Biblioteca", font=fuente_titulo, bg="#2c3e50", fg="#ecf0f1")
+    label_titulo = tk.Label(ventana, text="ALEJANDRÍA - Menú Principal", font=fuente_titulo, bg="#2c3e50", fg="#ecf0f1")
     label_titulo.pack(pady=20)
 
     # Crear un marco para los botones
