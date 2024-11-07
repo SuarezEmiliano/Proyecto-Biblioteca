@@ -9,7 +9,7 @@ import re
 def abrir_ventana_prestamo_libros():
     ventana = tk.Toplevel()
     ventana.title("Préstamo de Libros")
-    ventana.geometry("470x400+750+240")
+    ventana.geometry("+750+300")
     ventana.configure(bg="#2c3e50")
 
     # Obtener libros disponibles de la base de datos
