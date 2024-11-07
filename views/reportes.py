@@ -1,23 +1,71 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 from entities.Prestamo import Prestamo
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.backends.backend_pdf import PdfPages  # Importa PdfPages
+from fpdf import FPDF  # Importa la librería FPDF
 
-def generar_pdf(titulo, contenido, archivo):
+
+def mostrar_grafico(libros):
+    # Convertir los datos en un DataFrame
+    df = pd.DataFrame(libros, columns=["Libro", "Cantidad de préstamos"])
+
+    # Crear el gráfico de barras
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x="Cantidad de préstamos", y="Libro", data=df, palette="Blues_d", hue="Libro")
+
+    # Configurar el gráfico
+    plt.title("Libros más prestados el último mes")
+    plt.xlabel("Cantidad de Préstamos")
+    plt.ylabel("Libro")
+
+    # Guardar el gráfico como un archivo PDF
+    with PdfPages('reporte_libros_prestados.pdf') as pdf:
+        pdf.savefig()  # Guarda la figura actual en el archivo PDF
+        plt.close()  # Cierra la figura para liberar memoria
+
+    messagebox.showinfo("Reporte Generado", "El gráfico ha sido guardado como un archivo PDF.")
+
+
+def generar_pdf_prestamos_vencidos(prestamos):
     # Crear el documento PDF
-    c = canvas.Canvas(archivo, pagesize=letter)
-    c.setFont("Helvetica", 12)
-    c.drawString(100, 750, titulo)
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
 
-    # Escribir el contenido
-    y_position = 730
-    for linea in contenido:
-        c.drawString(100, y_position, linea)
-        y_position -= 20  # Ajustar la posición para cada línea
+    # Título del reporte
+    pdf.cell(200, 10, txt="Reporte de Préstamos Vencidos", ln=True, align='C')
+
+    # Agregar los datos de los préstamos vencidos
+    for prestamo in prestamos:
+        pdf.ln(10)  # Salto de línea
+        pdf.cell(200, 10, txt=f"Usuario: {prestamo[0]} | Libro: {prestamo[1]} | Fecha préstamo: {prestamo[2]} | Fecha devolución: {prestamo[3]}", ln=True)
 
     # Guardar el archivo PDF
-    c.save()
+    pdf.output("reporte_prestamos_vencidos.pdf")
+    messagebox.showinfo("Reporte Generado", "El reporte de préstamos vencidos ha sido guardado como PDF.")
+
+
+def generar_pdf_usuarios_mas_prestamos(usuarios):
+    # Crear el documento PDF
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Título del reporte
+    pdf.cell(200, 10, txt="Reporte de Usuarios con Más Préstamos", ln=True, align='C')
+
+    # Agregar los datos de los usuarios
+    for usuario in usuarios:
+        pdf.ln(10)  # Salto de línea
+        pdf.cell(200, 10, txt=f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}", ln=True)
+
+    # Guardar el archivo PDF
+    pdf.output("reporte_usuarios_mas_prestamos.pdf")
+    messagebox.showinfo("Reporte Generado", "El reporte de usuarios con más préstamos ha sido guardado como PDF.")
+
 
 def abrir_ventana_reportes():
     ventana = tk.Toplevel()
@@ -48,15 +96,16 @@ def abrir_ventana_reportes():
         if reporte_seleccionado == "Prestamos vencidos":
             prestamos = Prestamo.obtener_prestamos_vencidos()
             if prestamos:
-                contenido = [f"Usuario: {prestamo[0]} | Libro: {prestamo[1]} | Fecha préstamo: {prestamo[2]} | Fecha devolución: {prestamo[3]}" for prestamo in prestamos]
+                contenido = [
+                    f"Usuario: {prestamo[0]} | Libro: {prestamo[1]} | Fecha préstamo: {prestamo[2]} | Fecha devolución: {prestamo[3]}"
+                    for prestamo in prestamos]
                 # Mostrar los resultados en el Listbox
                 for linea in contenido:
                     listbox_resultados.insert(tk.END, linea)
                 # Mostrar el Listbox ahora que hay datos
                 listbox_resultados.pack()
-                # Generar el PDF
-                generar_pdf("Prestamos Vencidos", contenido, "prestamos_vencidos.pdf")
-                messagebox.showinfo("Reporte Generado", "El reporte de préstamos vencidos ha sido generado como PDF.")
+                # Generar el PDF para préstamos vencidos
+                generar_pdf_prestamos_vencidos(prestamos)
             else:
                 messagebox.showinfo("Prestamos Vencidos", "No hay prestamos vencidos.")
 
@@ -69,24 +118,23 @@ def abrir_ventana_reportes():
                     listbox_resultados.insert(tk.END, linea)
                 # Mostrar el Listbox ahora que hay datos
                 listbox_resultados.pack()
-                # Generar el PDF
-                generar_pdf("Libros más prestados", contenido, "libros_mas_prestados.pdf")
-                messagebox.showinfo("Reporte Generado", "El reporte de libros más prestados ha sido generado como PDF.")
+                # Mostrar el gráfico de barras y guardarlo como PDF
+                mostrar_grafico(libros)
             else:
                 messagebox.showinfo("Libros más prestados", "No hay datos de libros prestados el último mes.")
 
         elif reporte_seleccionado == "Usuarios con más préstamos de libros":
             usuarios = Prestamo.obtener_usuarios_con_mas_prestamos()
             if usuarios:
-                contenido = [f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}" for usuario in usuarios]
+                contenido = [f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}" for usuario in
+                             usuarios]
                 # Mostrar los resultados en el Listbox
                 for linea in contenido:
                     listbox_resultados.insert(tk.END, linea)
                 # Mostrar el Listbox ahora que hay datos
                 listbox_resultados.pack()
-                # Generar el PDF
-                generar_pdf("Usuarios con más préstamos", contenido, "usuarios_mas_prestamos.pdf")
-                messagebox.showinfo("Reporte Generado", "El reporte de usuarios con más préstamos ha sido generado como PDF.")
+                # Generar el PDF para usuarios con más préstamos
+                generar_pdf_usuarios_mas_prestamos(usuarios)
             else:
                 messagebox.showinfo("Usuarios con más préstamos", "No hay usuarios con préstamos registrados.")
 
