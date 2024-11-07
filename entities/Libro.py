@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class Libro:
     def __init__(self, isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible):
         self.isbn = isbn
@@ -15,10 +16,12 @@ class Libro:
         cursor.execute('''
             INSERT INTO libros (isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible) 
             VALUES (?, ?, ?, ?, ?, ?)
-        ''', (self.isbn, self.titulo, self.genero, self.anio_publicacion, self.id_autor, self.cantidad_disponible))
+        ''', (self.isbn, self.titulo, self.genero, self.anio_publicacion,
+              self.id_autor, self.cantidad_disponible))
         conn.commit()
         conn.close()
 
+    @staticmethod
     def obtener_libros_disponibles():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -27,6 +30,7 @@ class Libro:
         conn.close()
         return libros
 
+    @staticmethod
     def obtener_cantidad_disponible(isbn):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -38,4 +42,3 @@ class Libro:
             return cantidad[0]  # Devolvemos la cantidad disponible
         else:
             return None
-

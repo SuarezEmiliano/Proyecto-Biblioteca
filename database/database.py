@@ -1,9 +1,11 @@
 import sqlite3
 
+
 # Conexión a la base de datos (creará el archivo biblioteca.db si no existe)
 def conectar_db():
     conn = sqlite3.connect('../biblioteca.db')
     return conn
+
 
 # Creación de las tablas
 def crear_tablas():
@@ -63,6 +65,7 @@ def crear_tablas():
     conn.commit()
     conn.close()
     print("Tablas creadas correctamente.")
+
 
 if __name__ == "__main__":
     crear_tablas()

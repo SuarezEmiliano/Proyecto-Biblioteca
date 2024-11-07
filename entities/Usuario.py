@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class Usuario:
     def __init__(self, nombre, apellido, tipo_usuario, direccion, telefono):
         # Eliminamos self.id ya que se generará automáticamente en la base de datos
@@ -19,6 +20,7 @@ class Usuario:
         conn.commit()
         conn.close()
 
+    @staticmethod
     def obtener_usuarios():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -27,6 +29,7 @@ class Usuario:
         conn.close()
         return usuarios
 
+    @staticmethod
     def obtener_nombre_apellido(id_usuario):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()

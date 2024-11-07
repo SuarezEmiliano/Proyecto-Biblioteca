@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
 
+
 class Prestamo:
     def __init__(self, id_usuario, isbn, fecha_prestamo, fecha_devolucion):
         self.id_usuario = id_usuario
@@ -18,6 +19,7 @@ class Prestamo:
         conn.commit()
         conn.close()
 
+    @staticmethod
     def obtener_prestamos():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -27,6 +29,7 @@ class Prestamo:
         return prestamos
 
     # Función para obtener prestamos vencidos
+    @staticmethod
     def obtener_prestamos_vencidos():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -42,6 +45,7 @@ class Prestamo:
         return prestamos
 
     # Función para obtener libros más prestados del último mes
+    @staticmethod
     def obtener_libros_mas_prestados():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -60,6 +64,7 @@ class Prestamo:
         return libros
 
     # Función para obtener usuarios con más préstamos
+    @staticmethod
     def obtener_usuarios_con_mas_prestamos():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()

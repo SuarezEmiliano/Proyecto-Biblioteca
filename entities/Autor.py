@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class Autor:
     def __init__(self, nombre, apellido, nacionalidad):
         self.nombre = nombre
@@ -14,6 +15,7 @@ class Autor:
         conn.commit()
         conn.close()
 
+    @staticmethod
     def obtener_autores():
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()

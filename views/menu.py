@@ -1,12 +1,14 @@
 import tkinter as tk
-from tkinter import font as tkFont
-from .registro_autores import abrir_ventana_registro_autores
-from .registro_libros import abrir_ventana_registro_libros
-from .registro_usuarios import abrir_ventana_registro_usuarios
-from .prestamo_libros import abrir_ventana_prestamo_libros
-from .devolucion_libros import abrir_ventana_devolucion_libros
-from .consulta_disponibilidad import abrir_ventana_consulta_disponibilidad
-from .reportes import abrir_ventana_reportes
+from tkinter import font as tkfont
+
+from views.registro_autores import abrir_ventana_registro_autores
+from views.registro_libros import abrir_ventana_registro_libros
+from views.registro_usuarios import abrir_ventana_registro_usuarios
+from views.prestamo_libros import abrir_ventana_prestamo_libros
+from views.devolucion_libros import abrir_ventana_devolucion_libros
+from views.consulta_disponibilidad import abrir_ventana_consulta_disponibilidad
+from views.reportes import abrir_ventana_reportes
+
 
 def abrir_ventana():
     def manejar_opcion(opcion):
@@ -33,8 +35,8 @@ def abrir_ventana():
     ventana.resizable(False, False)
 
     # Establecer una fuente personalizada
-    fuente_titulo = tkFont.Font(family="Helvetica", size=16, weight="bold")
-    fuente_boton = tkFont.Font(family="Helvetica", size=12)
+    fuente_titulo = tkfont.Font(family="Helvetica", size=16, weight="bold")
+    fuente_boton = tkfont.Font(family="Helvetica", size=12)
 
     # Etiqueta de título
     label_titulo = tk.Label(ventana, text="Sistema de Biblioteca", font=fuente_titulo, bg="#2c3e50", fg="#ecf0f1")
