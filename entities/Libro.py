@@ -2,19 +2,21 @@ import sqlite3
 
 
 class Libro:
-    def __init__(self, isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible):
+    def __init__(self, isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible, estado, condicion):
         self.isbn = isbn
         self.titulo = titulo
         self.genero = genero
         self.anio_publicacion = anio_publicacion
         self.id_autor = id_autor
         self.cantidad_disponible = cantidad_disponible
+        self.estado = estado
+        self.condicion = condicion
 
     def guardar(self):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO libros (isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible) 
+            INSERT INTO libros (isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible, estado, condicion) 
             VALUES (?, ?, ?, ?, ?, ?)
         ''', (self.isbn, self.titulo, self.genero, self.anio_publicacion,
               self.id_autor, self.cantidad_disponible))
