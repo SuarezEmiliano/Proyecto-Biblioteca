@@ -135,7 +135,7 @@ def mostrar_confirmacion():
 def abrir_ventana_reportes():
     ventana = tk.Toplevel()
     ventana.title("Reportes")
-    ventana.geometry("500x500+750+240")
+    ventana.geometry("600x600+750+240")
     ventana.configure(bg="#2c3e50")
 
     # Crear un marco para el formulario

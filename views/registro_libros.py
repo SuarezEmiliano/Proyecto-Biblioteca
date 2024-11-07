@@ -7,7 +7,7 @@ import re
 def abrir_ventana_registro_libros():
     ventana = tk.Toplevel()
     ventana.title("Registro de Libros")
-    ventana.geometry("+750+300")
+    ventana.geometry("600x600+750+240")
     ventana.configure(bg="#2c3e50")
     ventana.resizable(False, False)
 
