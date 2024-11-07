@@ -27,14 +27,15 @@ class Libro:
         conn.close()
         return libros
 
-    def obtener_libro(isbn):
+    def obtener_cantidad_disponible(isbn):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT titulo FROM libros WHERE isbn = ?", (isbn,))
-        libro = cursor.fetchone()
+        cursor.execute("SELECT cantidad_disponible FROM libros WHERE isbn = ?", (isbn,))
+        cantidad = cursor.fetchone()
         conn.close()
 
-        if libro:
-            return libro
+        if cantidad:
+            return cantidad[0]  # Devolvemos la cantidad disponible
         else:
             return None
+
