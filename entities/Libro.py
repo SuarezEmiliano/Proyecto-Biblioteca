@@ -53,3 +53,12 @@ class Libro:
                        (cantidad, isbn))
         conn.commit()
         conn.close()
+
+    @staticmethod
+    def actualizar_cantidad_buen_estado(isbn, cantidad):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE libros SET cantidad_buen_estado = cantidad_buen_estado + ? WHERE isbn = ?",
+                       (cantidad, isbn))
+        conn.commit()
+        conn.close()

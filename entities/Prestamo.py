@@ -95,7 +95,7 @@ class Prestamo:
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT p.id_usuario, l.titulo, p.fecha_prestamo, p.fecha_devolucion_estimada 
+            SELECT p.id_usuario, l.titulo, p.fecha_prestamo, p.fecha_devolucion_estimada, p.id, p.isbn
             FROM prestamos p
             JOIN libros l ON p.isbn = l.isbn
             WHERE p.fecha_devolucion_real IS NULL
