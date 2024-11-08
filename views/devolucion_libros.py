@@ -30,4 +30,6 @@ def abrir_ventana_devolucion_libros():
     label_error_libro = tk.Label(frame, text="", fg="red", bg="#34495e")
     label_error_libro.grid(row=2, column=1, sticky="w")
 
+
+
     ventana.mainloop()
