@@ -1,12 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 from entities.Prestamo import Prestamo
+from entities.Usuario import Usuario
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 from fpdf import FPDF
 from datetime import datetime
+
 
 def mostrar_grafico(libros):
     # Convertir los datos en un DataFrame
@@ -31,7 +33,7 @@ def mostrar_grafico(libros):
 def esta_vencido(fecha_devolucion_estimada, fecha_devolucion_real=None):
     # Convertir las fechas de string a objetos datetime
     fecha_devolucion_estimada = datetime.strptime(fecha_devolucion_estimada, "%Y-%m-%d")
-    
+
     if fecha_devolucion_real:
         # Convertir la fecha real a datetime si se ha proporcionado
         fecha_devolucion_real = datetime.strptime(fecha_devolucion_real, "%Y-%m-%d")
@@ -66,8 +68,28 @@ def generar_pdf_prestamos_vencidos(prestamos):
     # Guardar el archivo PDF
     pdf.output("reporte_prestamos_vencidos.pdf")
     mostrar_confirmacion()
-    
+
+
 def generar_pdf_usuarios_mas_prestamos(usuarios):
+    # Creamos una lista con los usuarios y sus respectivas cantidades de préstamos
+    usuarios_con_prestamos = []
+
+    for usuario in usuarios:
+        nombre_usuario = usuario[0]
+        apellido_usuario = usuario[1]
+
+        # Obtener el ID del usuario por su nombre y apellido
+        id_usuario = Usuario.obtener_id_usuario_por_nombre_apellido(nombre_usuario, apellido_usuario)
+
+        # Obtener la cantidad de préstamos del usuario
+        cantidad_prestamos = Prestamo.obtener_libros_prestados_por_usuario(id_usuario)
+
+        # Añadir el usuario y su cantidad de préstamos a la lista
+        usuarios_con_prestamos.append((nombre_usuario, apellido_usuario, cantidad_prestamos))
+
+    # Ordenar la lista de usuarios por la cantidad de préstamos en orden descendente
+    usuarios_con_prestamos.sort(key=lambda x: x[2], reverse=True)
+
     # Crear el documento PDF
     pdf = FPDF()
     pdf.add_page()
@@ -98,24 +120,32 @@ def generar_pdf_usuarios_mas_prestamos(usuarios):
     pdf.set_font("Arial", style='B', size=12)
     pdf.set_fill_color(0, 139, 139)
 
+    # Definir el ancho de las celdas
+    ancho_usuario = 80  # Ancho para la columna de usuario
+    ancho_prestamos = 50  # Ancho para la columna de cantidad de préstamos
+
     # Calcular el centro de la página para la tabla
-    ancho_tabla = 140
-    pdf.set_x((210 - ancho_tabla) / 2)
+    pdf.set_x((210 - (ancho_usuario + ancho_prestamos)) / 2)
 
     # Encabezados de la tabla
-    pdf.cell(70, 10, txt="Usuario", border=1, align='C', fill=True)
-    pdf.cell(70, 10, txt="Cantidad de Préstamos", border=1, align='C', fill=True)
+    pdf.cell(ancho_usuario, 10, txt="Usuario", border=1, align='C', fill=True)
+    pdf.cell(ancho_prestamos, 10, txt="Cantidad de Préstamos", border=1, align='C', fill=True)
     pdf.ln()
 
     # Cambiar a una fuente normal para los datos
     pdf.set_font("Arial", size=10)
 
     # Agregar los datos de los usuarios en las filas de la tabla
-    for usuario in usuarios:
-        pdf.set_x((210 - ancho_tabla) / 2) 
+    for usuario in usuarios_con_prestamos:
+        # usuario[0] -> nombre_usuario, usuario[1] -> apellido_usuario, usuario[2] -> cantidad_prestamos
+        nombre_usuario = usuario[0]
+        apellido_usuario = usuario[1]
+        cantidad_prestamos = usuario[2]
 
-        pdf.cell(70, 10, txt=f"{usuario[0]} {usuario[1]}", border=1, align='C')
-        pdf.cell(70, 10, txt=str(usuario[2]), border=1, align='C')
+        # Escribir los datos del usuario en la tabla
+        pdf.set_x((210 - (ancho_usuario + ancho_prestamos)) / 2)
+        pdf.cell(ancho_usuario, 10, txt=f"{nombre_usuario} {apellido_usuario}", border=1, align='C')
+        pdf.cell(ancho_prestamos, 10, txt=str(cantidad_prestamos), border=1, align='C')
         pdf.ln()
 
     # Pie de página
@@ -211,17 +241,33 @@ def abrir_ventana_reportes():
                 messagebox.showinfo("Libros más prestados", "No hay datos de libros prestados el último mes.")
 
         elif reporte_seleccionado == "Usuarios con más préstamos de libros":
-            usuarios = Prestamo.obtener_usuarios_con_mas_prestamos()
-            if usuarios:
-                contenido = [f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}" for usuario in
-                             usuarios]
+            usuarios = Usuario.obtener_usuarios()
+            usuarios_con_prestamos = []
+            for usuario in usuarios:
+                id_usuario = usuario[0]
+                nombre_y_apellido = Usuario.obtener_nombre_apellido(id_usuario)
+                nombre_usuario = nombre_y_apellido[0]
+                apellido_usuario = nombre_y_apellido[1]
+
+                # Obtener la cantidad de préstamos del usuario
+                cantidad_prestamos = Prestamo.obtener_libros_prestados_por_usuario(id_usuario)
+
+                # Añadir el usuario y su cantidad de préstamos a la lista
+                usuarios_con_prestamos.append((nombre_usuario, apellido_usuario, cantidad_prestamos))
+            usuarios_con_prestamos.sort(key=lambda x: x[2], reverse=True)
+            if usuarios_con_prestamos:
+                contenido = [
+                    f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}"
+                    for usuario in usuarios_con_prestamos
+                ]
                 # Mostrar los resultados en el Listbox
                 for linea in contenido:
                     listbox_resultados.insert(tk.END, linea)
                 # Mostrar el Listbox ahora que hay datos
                 listbox_resultados.pack()
-                # Generar el PDF para usuarios con más préstamos
-                generar_pdf_usuarios_mas_prestamos(usuarios)
+
+                # Generar el PDF para los usuarios con más préstamos
+                generar_pdf_usuarios_mas_prestamos(usuarios_con_prestamos)
             else:
                 messagebox.showinfo("Usuarios con más préstamos", "No hay usuarios con préstamos registrados.")
 
