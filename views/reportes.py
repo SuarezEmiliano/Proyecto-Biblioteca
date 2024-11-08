@@ -28,6 +28,19 @@ def mostrar_grafico(libros):
 
     mostrar_confirmacion()
 
+def esta_vencido(fecha_devolucion_estimada, fecha_devolucion_real=None):
+    # Convertir las fechas de string a objetos datetime
+    fecha_devolucion_estimada = datetime.strptime(fecha_devolucion_estimada, "%Y-%m-%d")
+    
+    if fecha_devolucion_real:
+        # Convertir la fecha real a datetime si se ha proporcionado
+        fecha_devolucion_real = datetime.strptime(fecha_devolucion_real, "%Y-%m-%d")
+        # El préstamo está vencido si la fecha de devolución real es posterior a la estimada
+        return fecha_devolucion_real > fecha_devolucion_estimada
+    else:
+        # Si no se tiene fecha de devolución real, el préstamo está vencido si la estimada ha pasado
+        return fecha_devolucion_estimada < datetime.now()
+
 def generar_pdf_prestamos_vencidos(prestamos):
     # Crear el documento PDF
     pdf = FPDF()
@@ -39,8 +52,16 @@ def generar_pdf_prestamos_vencidos(prestamos):
 
     # Agregar los datos de los préstamos vencidos
     for prestamo in prestamos:
-        pdf.ln(10)
-        pdf.cell(200, 10, txt=f"Usuario: {prestamo[0]} | Libro: {prestamo[1]} | Fecha préstamo: {prestamo[2]} | Fecha devolución: {prestamo[3]}", ln=True)
+        usuario = prestamo[0]
+        libro = prestamo[1]
+        fecha_prestamo = prestamo[2]
+        fecha_devolucion_estimada = prestamo[3]
+        fecha_devolucion_real = prestamo[4]
+
+        # Verificar si el préstamo está vencido
+        if esta_vencido(fecha_devolucion_estimada, fecha_devolucion_real):
+            pdf.ln(10)
+            pdf.cell(200, 10, txt=f"Usuario: {usuario} | Libro: {libro} | Fecha préstamo: {fecha_prestamo} | Fecha devolución estimada: {fecha_devolucion_estimada} | Fecha devolución real: {fecha_devolucion_real or 'No registrada'}", ln=True)
 
     # Guardar el archivo PDF
     pdf.output("reporte_prestamos_vencidos.pdf")
@@ -163,7 +184,8 @@ def abrir_ventana_reportes():
             if prestamos:
                 contenido = [
                     f"Usuario: {prestamo[0]} | Libro: {prestamo[1]} | Fecha préstamo: {prestamo[2]} | Fecha devolución: {prestamo[3]}"
-                    for prestamo in prestamos]
+                    for prestamo in prestamos
+                ]
                 # Mostrar los resultados en el Listbox
                 for linea in contenido:
                     listbox_resultados.insert(tk.END, linea)
