@@ -50,3 +50,21 @@ class Usuario:
         tipo_usuario = cursor.fetchone()
         conn.close()
         return tipo_usuario[0] if tipo_usuario else None
+
+    @staticmethod
+    def obtener_id_usuario_por_nombre_apellido(nombre, apellido):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+
+        # Ejecutamos la consulta para obtener el id_usuario con la combinación de nombre y apellido
+        cursor.execute("SELECT id_usuario FROM usuarios WHERE nombre = ? AND apellido = ?", (nombre, apellido))
+
+        # Recuperamos un solo resultado
+        usuario = cursor.fetchone()
+        conn.close()
+
+        # Si encontramos un resultado, devolvemos el id_usuario
+        if usuario:
+            return usuario[0]
+        else:
+            return None
