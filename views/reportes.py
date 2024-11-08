@@ -47,23 +47,78 @@ def generar_pdf_prestamos_vencidos(prestamos):
     # Crear el documento PDF
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
 
-    # Título del reporte
+    # Establecer el estilo de fuente para el encabezado
+    pdf.set_font("Arial", style='B', size=14)
+
+    # Encabezado (puedes agregar un logo o un texto adicional aquí si es necesario)
+    pdf.cell(200, 10, txt="Biblioteca Alejandría", ln=True, align='C')
+    pdf.ln(5)
+
+    # Dibuja la línea debajo del encabezado
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+
+    pdf.ln(10)
+
+    # Título del reporte (centrado, en negrita y más grande)
+    pdf.set_font("Arial", style='B', size=16)
     pdf.cell(200, 10, txt="Reporte de Préstamos Vencidos", ln=True, align='C')
+    pdf.ln(10)
 
-    # Agregar los datos de los préstamos vencidos
+    # Subtítulo (en negrita)
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Detalle", ln=True, align='L')
+    pdf.ln(5)
+
+    # Crear los encabezados de la tabla con un formato profesional
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.set_fill_color(0, 139, 139)
+
+    # Definir el ancho de las celdas
+    ancho_isbn = 50  # Ancho para la columna ISBN
+    ancho_fecha_prestamo = 40  # Ancho para la columna de fecha préstamo
+    ancho_fecha_devolucion_estimada = 50  # Ancho para la columna de fecha devolución estimada
+    ancho_fecha_devolucion_real = 50  # Ancho para la columna de fecha devolución real
+
+    # Calcular el centro de la página para la tabla
+    pdf.set_x((210 - (ancho_isbn + ancho_fecha_prestamo + ancho_fecha_devolucion_estimada + ancho_fecha_devolucion_real)) / 2)
+
+    # Encabezados de la tabla
+    pdf.cell(ancho_isbn, 10, txt="Libro", border=1, align='C', fill=True)
+    pdf.cell(ancho_fecha_prestamo, 10, txt="Préstamo", border=1, align='C', fill=True)
+    pdf.cell(ancho_fecha_devolucion_estimada, 10, txt="Devolución Estimada", border=1, align='C', fill=True)
+    pdf.cell(ancho_fecha_devolucion_real, 10, txt="Devolución Real", border=1, align='C', fill=True)
+    pdf.ln()
+
+    # Cambiar a una fuente normal para los datos
+    pdf.set_font("Arial", size=10)
+
+    # Agregar los datos de los préstamos en las filas de la tabla
     for prestamo in prestamos:
-        usuario = prestamo[0]
-        libro = prestamo[1]
+        isbn = prestamo[1]  # Suponiendo que el ISBN está en la posición 1
         fecha_prestamo = prestamo[2]
         fecha_devolucion_estimada = prestamo[3]
         fecha_devolucion_real = prestamo[4]
 
         # Verificar si el préstamo está vencido
         if esta_vencido(fecha_devolucion_estimada, fecha_devolucion_real):
-            pdf.ln(10)
-            pdf.cell(200, 10, txt=f"Usuario: {usuario} | Libro: {libro} | Fecha préstamo: {fecha_prestamo} | Fecha devolución estimada: {fecha_devolucion_estimada} | Fecha devolución real: {fecha_devolucion_real or 'No registrada'}", ln=True)
+            # Escribir los datos en la tabla
+            pdf.set_x((210 - (ancho_isbn + ancho_fecha_prestamo + ancho_fecha_devolucion_estimada + ancho_fecha_devolucion_real)) / 2)
+            pdf.cell(ancho_isbn, 10, txt=str(isbn), border=1, align='C')
+            pdf.cell(ancho_fecha_prestamo, 10, txt=fecha_prestamo, border=1, align='C')
+            pdf.cell(ancho_fecha_devolucion_estimada, 10, txt=fecha_devolucion_estimada, border=1, align='C')
+            pdf.cell(ancho_fecha_devolucion_real, 10, txt=fecha_devolucion_real, border=1, align='C')
+            pdf.ln()
+
+    # Pie de página
+    pdf.set_y(-30)
+    pdf.set_font("Arial", style='I', size=8)
+
+    # Agregar la fecha y hora al pie de página
+    pdf.cell(0, 10, txt=f"Fecha de generación: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", ln=True, align='C')
+
+    # Mensaje de derechos reservados
+    pdf.cell(0, 10, txt="Reporte generado automáticamente. Todos los derechos reservados.", align='C')
 
     # Guardar el archivo PDF
     pdf.output("reporte_prestamos_vencidos.pdf")
