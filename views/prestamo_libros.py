@@ -73,7 +73,7 @@ def abrir_ventana_prestamo_libros():
         confirmacion.geometry("400x200+750+240")
         confirmacion.configure(bg="#2c3e50")
 
-        tk.Label(confirmacion, text="Devolución registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
+        tk.Label(confirmacion, text="Devolución registrada con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
 
         # Botón para cerrar la ventana de confirmación
         tk.Button(
