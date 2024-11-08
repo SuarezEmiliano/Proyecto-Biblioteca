@@ -86,8 +86,23 @@ class Prestamo:
         ''')
         usuarios = cursor.fetchall()
         conn.close()
-        
+
         return usuarios
+
+    # Función para obtener préstamos pendientes
+    @staticmethod
+    def obtener_prestamos_pendientes():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT p.id_usuario, l.titulo, p.fecha_prestamo, p.fecha_devolucion_estimada 
+            FROM prestamos p
+            JOIN libros l ON p.isbn = l.isbn
+            WHERE p.fecha_devolucion_real IS NULL
+        ''')
+        prestamos_pendientes = cursor.fetchall()
+        conn.close()
+        return prestamos_pendientes
 
     @staticmethod
     def obtener_libros_prestados_por_usuario(id_usuario):
