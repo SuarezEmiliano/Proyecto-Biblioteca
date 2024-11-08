@@ -9,7 +9,7 @@ import re
 def abrir_ventana_prestamo_libros():
     ventana = tk.Toplevel()
     ventana.title("Préstamo de Libros")
-    ventana.geometry("600x400+750+240")
+    ventana.geometry("600x600+750+240")
     ventana.configure(bg="#2c3e50")
 
     # Obtener libros disponibles de la base de datos
@@ -21,7 +21,8 @@ def abrir_ventana_prestamo_libros():
 
     # Crear un marco para el formulario
     frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
-    frame.grid(pady=20, row=0, column=0)
+    frame.grid(pady=20, row=0, column=0, sticky="ew")
+    ventana.grid_columnconfigure(0, weight=1)
 
     tk.Label(frame, text="Préstamo de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(
         row=0, column=0, columnspan=2, pady=10
