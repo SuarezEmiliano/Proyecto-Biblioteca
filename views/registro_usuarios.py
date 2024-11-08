@@ -94,21 +94,22 @@ def abrir_ventana_registro_usuarios():
 
         if campos_validos:
             # Crear una instancia del usuario
-            usuario = Usuario(nombre=nombre, apellido=apellido, tipo_usuario=tipo, direccion=direccion, telefono=telefono)
+            usuario = Usuario(nombre=nombre, apellido=apellido, tipo_usuario=tipo, direccion=direccion,
+                              telefono=telefono)
             usuario.guardar()
 
-            # Cerrar la ventana de registro
-            ventana.destroy()
-
-            # Mostrar la ventana de confirmación personalizada
-            mostrar_confirmacion()
-
-            # Limpiar los campos (esto ya no es necesario ya que la ventana se cierra)
+            # Limpiar los campos antes de mostrar la ventana de confirmación
             entry_nombre.delete(0, tk.END)
             entry_apellido.delete(0, tk.END)
             entry_direccion.delete(0, tk.END)
             entry_telefono.delete(0, tk.END)
             tipo_usuario.set("Estudiante")  # Restablecer a valor por defecto
+
+            # Mostrar la ventana de confirmación personalizada
+            mostrar_confirmacion()
+
+            # Cerrar la ventana de registro
+            ventana.destroy()
 
     def mostrar_confirmacion():
         confirmacion = tk.Toplevel()
@@ -116,7 +117,8 @@ def abrir_ventana_registro_usuarios():
         confirmacion.geometry("400x200+750+240")
         confirmacion.configure(bg="#2c3e50")
 
-        tk.Label(confirmacion, text="Usuario registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
+        tk.Label(confirmacion, text="Usuario registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50",
+                 fg="#ecf0f1").pack(pady=20)
 
         # Botón para cerrar la ventana de confirmación
         tk.Button(

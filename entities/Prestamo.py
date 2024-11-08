@@ -88,3 +88,12 @@ class Prestamo:
         conn.close()
         
         return usuarios
+
+    @staticmethod
+    def obtener_libros_prestados_por_usuario(id_usuario):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM prestamos WHERE id_usuario = ?", (id_usuario,))
+        cantidad_prestados = cursor.fetchone()[0]
+        conn.close()
+        return cantidad_prestados

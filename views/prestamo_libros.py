@@ -149,10 +149,27 @@ def abrir_ventana_prestamo_libros():
             # Obtener código del libro seleccionado
             codigo_libro = libro_seleccionado.split(" - ")[0]
 
+
             # Obtener id del usuario seleccionado
             id_usuario = usuario_seleccionado.split(" - ")[0]
 
-            
+
+            # Obtener el tipo de usuario (estudiante o profesor)
+            tipo_usuario = Usuario.obtener_tipo_usuario(id_usuario)
+
+
+            # Verificar la cantidad de libros prestados
+            libros_prestados = Prestamo.obtener_libros_prestados_por_usuario(id_usuario)
+
+
+            if tipo_usuario == "Estudiante" and libros_prestados >= 3:
+                label_error_libro.config(text="Un estudiante no puede tener más de 3 libros prestados.")
+                return
+            elif tipo_usuario == "Profesor" and libros_prestados >= 5:
+                label_error_libro.config(text="Un profesor no puede tener más de 5 libros prestados.")
+                return
+
+            # Registrar el préstamo
             prestamo = Prestamo(id_usuario, codigo_libro, fecha_prestamo, fecha_devolucion)
             prestamo.guardar()
 

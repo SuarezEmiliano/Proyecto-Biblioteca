@@ -41,3 +41,12 @@ class Usuario:
             return usuario
         else:
             return None
+
+    @staticmethod
+    def obtener_tipo_usuario(id_usuario):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT tipo_usuario FROM usuarios WHERE id_usuario = ?", (id_usuario,))
+        tipo_usuario = cursor.fetchone()
+        conn.close()
+        return tipo_usuario[0] if tipo_usuario else None
