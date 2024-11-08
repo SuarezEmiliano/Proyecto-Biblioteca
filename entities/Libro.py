@@ -2,25 +2,24 @@ import sqlite3
 
 
 class Libro:
-    def __init__(self, isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible, estado, condicion):
+    def __init__(self, isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible, cantidad_buen_estado):
         self.isbn = isbn
         self.titulo = titulo
         self.genero = genero
         self.anio_publicacion = anio_publicacion
         self.id_autor = id_autor
         self.cantidad_disponible = cantidad_disponible
-        self.estado = estado
-        self.condicion = condicion
+        self.cantidad_buen_estado = cantidad_buen_estado
 
     def guardar(self):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO libros (isbn, titulo, genero, anio_publicacion, 
-                id_autor, cantidad_disponible, estado, condicion) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                id_autor, cantidad_disponible, cantidad_buen_estado) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (self.isbn, self.titulo, self.genero, self.anio_publicacion,
-              self.id_autor, self.cantidad_disponible, self.estado, self.condicion))
+              self.id_autor, self.cantidad_disponible, self.cantidad_buen_estado))
         conn.commit()
         conn.close()
 
@@ -45,3 +44,12 @@ class Libro:
             return cantidad[0]  # Devolvemos la cantidad disponible
         else:
             return None
+
+    @staticmethod
+    def actualizar_cantidad_disponible(isbn, cantidad):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE libros SET cantidad_disponible = cantidad_disponible + ? WHERE isbn = ?",
+                       (cantidad, isbn))
+        conn.commit()
+        conn.close()

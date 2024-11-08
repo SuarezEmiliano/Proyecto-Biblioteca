@@ -31,8 +31,7 @@ def crear_tablas():
             anio_publicacion INTEGER,
             id_autor INTEGER,
             cantidad_disponible INTEGER,
-            estado TEXT NOT NULL, -- "En Biblioteca" o "Prestado"
-            condicion TEXT NOT NULL, -- "Buen Estado" o "Mal Estado"
+            cantidad_buen_estado INTEGER,
             FOREIGN KEY(id_autor) REFERENCES autores(id_autor)
         )
     ''')

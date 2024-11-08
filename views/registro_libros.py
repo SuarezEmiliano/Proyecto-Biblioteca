@@ -144,8 +144,9 @@ def abrir_ventana_registro_libros():
 
         if campos_validos:
             id_autor = autor_seleccionado.split(" - ")[0]
+            # Se asignan todos los libros directamente en buen estado
             libro = Libro(isbn, titulo, genero, anio_publicacion, id_autor,
-                          cantidad_disponible, "En Biblioteca", "Buen Estado")
+                          cantidad_disponible, cantidad_disponible)
             libro.guardar()
 
             mostrar_confirmacion()

@@ -73,7 +73,7 @@ def abrir_ventana_prestamo_libros():
         confirmacion.geometry("400x200+750+240")
         confirmacion.configure(bg="#2c3e50")
 
-        tk.Label(confirmacion, text="Devolución registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
+        tk.Label(confirmacion, text="Préstamo registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
 
         # Botón para cerrar la ventana de confirmación
         tk.Button(
@@ -172,6 +172,9 @@ def abrir_ventana_prestamo_libros():
             # Registrar el préstamo
             prestamo = Prestamo(id_usuario, codigo_libro, fecha_prestamo, fecha_devolucion)
             prestamo.guardar()
+
+            # Restar 1 a la cantidad disponible del libro
+            Libro.actualizar_cantidad_disponible(codigo_libro, -1)
 
             mostrar_confirmacion()
 

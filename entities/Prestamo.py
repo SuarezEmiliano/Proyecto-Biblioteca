@@ -112,3 +112,24 @@ class Prestamo:
         cantidad_prestados = cursor.fetchone()[0]
         conn.close()
         return cantidad_prestados
+
+    @staticmethod
+    def registrar_devolucion(id_prestamo, fecha_devolucion):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE prestamos 
+            SET fecha_devolucion_real = ? 
+            WHERE id = ?
+        ''', (fecha_devolucion, id_prestamo))
+        conn.commit()
+        conn.close()
+
+    @staticmethod
+    def obtener_codigo_libro(id_prestamo):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT isbn FROM prestamos WHERE id = ?', (id_prestamo,))
+        isbn = cursor.fetchone()[0]
+        conn.close()
+        return isbn

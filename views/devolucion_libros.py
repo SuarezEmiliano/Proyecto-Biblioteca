@@ -107,8 +107,14 @@ def abrir_ventana_devolucion_libros():
             # Obtener el id del préstamo seleccionado
             id_prestamo = prestamo_seleccionado.split(" - ")[0]
 
+            # Obtener el código del libro del préstamo
+            codigo_libro = Prestamo.obtener_codigo_libro(id_prestamo)
+
             # Actualizar la base de datos
             Prestamo.registrar_devolucion(id_prestamo, fecha_devolucion)
+
+            # Aumentar 1 a la cantidad disponible del libro
+            Libro.actualizar_cantidad_disponible(codigo_libro, 1)
 
             mostrar_confirmacion()
 
