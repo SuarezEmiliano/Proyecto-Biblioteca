@@ -30,7 +30,7 @@ def abrir_ventana():
     # Crear la ventana del menú
     ventana = tk.Tk()
     ventana.title("ALEJANDRÍA - Menú Principal")
-    ventana.geometry("400x550+750+240")
+    ventana.geometry("600x600+750+240")
     ventana.configure(bg="#2c3e50")
     ventana.resizable(False, False)
 
@@ -39,7 +39,7 @@ def abrir_ventana():
     fuente_boton = tkfont.Font(family="Helvetica", size=12)
 
     # Etiqueta de título
-    label_titulo = tk.Label(ventana, text="Sistema de Biblioteca", font=fuente_titulo, bg="#2c3e50", fg="#ecf0f1")
+    label_titulo = tk.Label(ventana, text="ALEJANDRÍA - Menú Principal", font=fuente_titulo, bg="#2c3e50", fg="#ecf0f1")
     label_titulo.pack(pady=20)
 
     # Crear un marco para los botones
