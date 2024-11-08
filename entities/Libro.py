@@ -16,10 +16,11 @@ class Libro:
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO libros (isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible, estado, condicion) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO libros (isbn, titulo, genero, anio_publicacion, 
+                id_autor, cantidad_disponible, estado, condicion) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', (self.isbn, self.titulo, self.genero, self.anio_publicacion,
-              self.id_autor, self.cantidad_disponible))
+              self.id_autor, self.cantidad_disponible, self.estado, self.condicion))
         conn.commit()
         conn.close()
 
