@@ -157,7 +157,7 @@ def abrir_ventana_registro_libros():
 
     # Función para consultar los libros creados
     def consultar_libros():
-        libros = Libro.obtener_libros()
+        libros = Libro.obtener_libros_consulta()
 
         # Crear una nueva ventana para mostrar los libros
         ventana_libros = tk.Toplevel()

@@ -105,13 +105,10 @@ def abrir_ventana_registro_autores():
             label_error_apellido.grid_remove()
             label_error_nacionalidad.grid_remove()
 
-            # Cerrar la ventana de registro de autor
-            ventana.destroy()
     # Función para consultar los libros creados
 
     def consultar_autores():
         autores = Autor.obtener_autores_consulta()
-        print(autores)
 
         # Crear una nueva ventana para mostrar los libros
         ventana_autores = tk.Toplevel()
