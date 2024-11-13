@@ -76,13 +76,13 @@ def abrir_ventana():
         ventana,
         text="Salir",
         font=fuente_boton,
-        bg="#f44336",
+        bg="#d9534f",
         fg="white",
-        width=10,
-        height=1,
+        width=25,
+        height=2,
         relief=tk.RAISED,
-        command=ventana.destroy
+        command=ventana.destroy,
     )
-    boton_salir.pack(pady=20)
+    boton_salir.pack(pady=0)
 
     ventana.mainloop()
