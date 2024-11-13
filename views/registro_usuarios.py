@@ -132,17 +132,36 @@ def abrir_ventana_registro_usuarios():
             height=2
         ).pack(pady=8)
 
-    # Botón para registrar el usuario
+
+
+    # Marco para los botones de "Cancelar" y "Registrar"
+    frame_botones = tk.Frame(ventana, bg="#2c3e50")
+    frame_botones.pack(pady=20)
+
+    # Botón de cancelar a la izquierda
+    boton_cancelar = tk.Button(
+        frame_botones,
+        text="Cancelar",
+        command=ventana.destroy,
+        bg="#d9534f",
+        fg="white",
+        font=("Helvetica", 12),
+        width=15,
+        height=2
+    )
+    boton_cancelar.grid(row=0, column=0, padx=10)
+
+    # Botón de registrar a la derecha
     boton_registrar = tk.Button(
-        ventana,
+        frame_botones,
         text="Registrar Usuario",
         command=registrar_usuario,
         bg="#008B8B",
         fg="white",
-        relief=tk.RAISED,
-        width=25, 
+        font=("Helvetica", 12),
+        width=15,
         height=2
     )
-    boton_registrar.pack(pady=20)
+    boton_registrar.grid(row=0, column=1, padx=10)
 
     ventana.mainloop()

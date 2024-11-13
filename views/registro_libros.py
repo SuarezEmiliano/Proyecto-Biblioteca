@@ -60,7 +60,7 @@ def abrir_ventana_registro_libros():
     tk.Label(frame, text="Cantidad Disponible:", bg="#34495e", fg="#ecf0f1").grid(row=11, column=0, sticky="w")
     entry_cantidad_disponible = tk.Entry(frame, width=30, font=("Helvetica", 12))
     entry_cantidad_disponible.grid(row=11, column=1, pady=5)
-    label_error_cantidad = tk.Label(frame, text="Debe ser un número entero", fg="red", bg="#34495e")
+    label_error_cantidad = tk.Label(frame, text="Debe ser un número entero mayor o igual a 1", fg="red", bg="#34495e")
     label_error_cantidad.grid(row=12, column=1, sticky="w")
     label_error_cantidad.grid_remove()
 
@@ -69,13 +69,13 @@ def abrir_ventana_registro_libros():
         return len(isbn) == 13 and isbn.isdigit()
 
     def validar_titulo_o_genero(texto):
-        return bool(re.fullmatch(r"[A-Za-záéíóúÁÉÍÓÚñÑ ]{1,20}", texto))
+        return bool(re.fullmatch(r"[A-Za-záéíóúÁÉÍÓÚñÑ ]{1,30}", texto))
 
     def validar_anio(anio):
         return len(anio) == 4 and anio.isdigit()
 
     def validar_cantidad(cantidad):
-        return cantidad.isdigit()
+        return cantidad.isdigit() and int(cantidad) >= 1
 
     def mostrar_confirmacion():
         confirmacion = tk.Toplevel()
@@ -144,13 +144,9 @@ def abrir_ventana_registro_libros():
 
         if campos_validos:
             id_autor = autor_seleccionado.split(" - ")[0]
-            # Se asignan todos los libros directamente en buen estado
-            libro = Libro(isbn, titulo, genero, anio_publicacion, id_autor,
-                          cantidad_disponible, cantidad_disponible)
+            libro = Libro(isbn, titulo, genero, anio_publicacion, id_autor, cantidad_disponible, cantidad_disponible)
             libro.guardar()
-
             mostrar_confirmacion()
-
             entry_isbn.delete(0, tk.END)
             entry_titulo.delete(0, tk.END)
             entry_genero.delete(0, tk.END)
@@ -158,17 +154,35 @@ def abrir_ventana_registro_libros():
             entry_cantidad_disponible.delete(0, tk.END)
             combobox_autores.set('')
 
-    # Botón de registro
+    # Marco para los botones de "Cancelar" y "Registrar"
+    frame_botones = tk.Frame(ventana, bg="#2c3e50")
+    frame_botones.pack(pady=20)
+
+    # Botón de cancelar a la izquierda
+    boton_cancelar = tk.Button(
+        frame_botones,
+        text="Cancelar",
+        command=ventana.destroy,
+        bg="#d9534f",
+        fg="white",
+        font=("Helvetica", 12),
+        width=15,
+        height=2
+    )
+    boton_cancelar.grid(row=0, column=0, padx=10)
+
+    # Botón de registrar a la derecha
     boton_registrar = tk.Button(
-        ventana,
+        frame_botones,
         text="Registrar Libro",
         command=registrar_libro,
         bg="#008B8B",
         fg="white",
         font=("Helvetica", 12),
-        width=25,
+        width=15,
         height=2
     )
-    boton_registrar.pack(pady=20)
+    boton_registrar.grid(row=0, column=1, padx=10)
+
 
     ventana.mainloop()
