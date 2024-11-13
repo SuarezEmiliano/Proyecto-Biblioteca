@@ -184,8 +184,12 @@ def abrir_ventana_registro_libros():
                    background=[('selected', '#16a085')],
                    foreground=[('selected', 'white')])
 
+        # Crear un frame para contener el Treeview y el botón de eliminar
+        frame_contenedor = tk.Frame(ventana_libros, bg="#2c3e50")
+        frame_contenedor.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
+
         # Crear el Treeview para mostrar los libros
-        tree = ttk.Treeview(ventana_libros,
+        tree = ttk.Treeview(frame_contenedor,
                             columns=("ISBN", "Título", "Género", "Año", "Autor", "Cantidad Disponible"),
                             show="headings")
 
@@ -224,11 +228,12 @@ def abrir_ventana_registro_libros():
             else:
                 messagebox.showwarning("Selección", "Por favor, selecciona un libro para eliminar.")
 
+        # Crear el botón de eliminar debajo del Treeview
         boton_eliminar = tk.Button(ventana_libros, text="Eliminar Libro", command=eliminar_libro_seleccionado,
-                                   width=15,height=2,bg="#d9534f", fg="white", font=("Helvetica", 12))
+                                   width=15, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
         boton_eliminar.pack(pady=10)
 
-        # Agregar el Treeview a la ventana
+        # Agregar el Treeview al frame
         tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
 
     # Marco para los botones de "Cancelar" y "Registrar"
@@ -264,12 +269,12 @@ def abrir_ventana_registro_libros():
     # Botón para consultar libros
     tk.Button(
         frame,
-        text="Consultar Libros",
+        text="Consultar Libros Existentes",
         command=consultar_libros,
-        bg="#008B8B",
+        bg="#005f8b",
         fg="white",
         font=("Helvetica", 12),
-        width=20,
+        width=25,
         height=2
     ).grid(row=14, column=0, columnspan=2, pady=10)
 
