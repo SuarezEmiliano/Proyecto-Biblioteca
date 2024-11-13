@@ -177,7 +177,7 @@ def abrir_ventana_registro_autores():
                 messagebox.showwarning("Selección", "Por favor, selecciona un autor para eliminar.")
 
         # Crear el botón de eliminar debajo del Treeview
-        boton_eliminar = tk.Button(ventana_autores, text="Eliminar Libro", command=eliminar_autor_seleccionado,
+        boton_eliminar = tk.Button(ventana_autores, text="Eliminar Autor", command=eliminar_autor_seleccionado,
                                    width=15, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
         boton_eliminar.pack(pady=10)
 

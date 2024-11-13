@@ -211,7 +211,7 @@ def abrir_ventana_registro_usuarios():
                 messagebox.showwarning("Selección", "Por favor, selecciona un usuario para eliminar.")
 
         # Crear el botón de eliminar debajo del Treeview
-        boton_eliminar = tk.Button(ventana_usuarios, text="Eliminar Libro", command=eliminar_usuario_seleccionado,
+        boton_eliminar = tk.Button(ventana_usuarios, text="Eliminar Usuario", command=eliminar_usuario_seleccionado,
                                    width=15, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
         boton_eliminar.pack(pady=10)
 
