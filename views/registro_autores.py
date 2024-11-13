@@ -168,13 +168,13 @@ def abrir_ventana_registro_autores():
             if selected_item:
                 id = tree.item(selected_item)["values"][0]
                 confirmacion = messagebox.askyesno("Confirmación",
-                                                   f"¿Estás seguro de que deseas eliminar el libro con ISBN {id}?")
+                                                   f"¿Estás seguro de que deseas eliminar el autor con el id: {id}?")
                 if confirmacion:
                     Autor.eliminar_autor(id)
                     tree.delete(selected_item)
-                    messagebox.showinfo("Éxito", "El libro ha sido eliminado correctamente.")
+                    messagebox.showinfo("Éxito", "El autor ha sido eliminado correctamente.")
             else:
-                messagebox.showwarning("Selección", "Por favor, selecciona un libro para eliminar.")
+                messagebox.showwarning("Selección", "Por favor, selecciona un autor para eliminar.")
 
         # Crear el botón de eliminar debajo del Treeview
         boton_eliminar = tk.Button(ventana_autores, text="Eliminar Libro", command=eliminar_autor_seleccionado,

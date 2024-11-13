@@ -30,6 +30,16 @@ class Usuario:
         return usuarios
 
     @staticmethod
+    def obtener_usuarios_consulta():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM usuarios")
+        usuarios = cursor.fetchall()
+        conn.close()
+        return usuarios
+
+
+    @staticmethod
     def obtener_nombre_apellido(id_usuario):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -68,3 +78,11 @@ class Usuario:
             return usuario[0]
         else:
             return None
+
+    @staticmethod
+    def eliminar_usuario(id_usuario):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM usuarios WHERE id_usuario = ?", (id_usuario,))
+        conn.commit()
+        conn.close()

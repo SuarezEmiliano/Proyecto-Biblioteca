@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
 import re
 from entities.Usuario import Usuario
 
@@ -132,7 +134,89 @@ def abrir_ventana_registro_usuarios():
             height=2
         ).pack(pady=8)
 
+    # Función para consultar los libros creados
 
+    def consultar_usuarios():
+        usuarios = Usuario.obtener_usuarios_consulta()
+        print(usuarios)
+
+        # Crear una nueva ventana para mostrar los libros
+        ventana_usuarios = tk.Toplevel()
+        ventana_usuarios.title("Consulta de Usuarios")
+        ventana_usuarios.geometry("1200x600+750+240")
+        ventana_usuarios.configure(bg="#2c3e50")
+
+        # Estilos del Treeview
+        estilo = ttk.Style()
+        estilo.configure("Treeview",
+                         background="#34495e",
+                         foreground="white",
+                         fieldbackground="#008B8B",
+                         font=("Helvetica", 10),
+                         rowheight=25)
+
+        estilo.configure("Treeview.Heading",
+                         background="#2c3e50",
+                         foreground="black",
+                         font=("Helvetica", 12, "bold"),
+                         anchor="center")
+
+        estilo.map("Treeview",
+                   background=[('selected', '#16a085')],
+                   foreground=[('selected', 'white')])
+
+        # Crear un frame para contener el Treeview y el botón de eliminar
+        frame_contenedor = tk.Frame(ventana_usuarios, bg="#2c3e50")
+        frame_contenedor.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
+
+        # Crear el Treeview para mostrar los libros
+        tree = ttk.Treeview(frame_contenedor,
+                            columns=("Id","Nombre", "Apellido", "Tipo","Direccion","Telefono"),
+                            show="headings")
+
+        # Definir las columnas y encabezados
+        tree.heading("Id", text="Id", anchor="center")
+        tree.heading("Nombre", text="Nombre", anchor="center")
+        tree.heading("Apellido", text="Apellido", anchor="center")
+        tree.heading("Tipo", text="Tipo", anchor="center")
+        tree.heading("Direccion", text="Direccion", anchor="center")
+        tree.heading("Telefono", text="Telefono", anchor="center")
+
+        # Definir la alineación de las columnas
+        tree.column("Id", width=120, anchor="center")
+        tree.column("Nombre", width=120, anchor="center")
+        tree.column("Apellido", width=250, anchor="center")
+        tree.column("Tipo", width=150, anchor="center")
+        tree.column("Direccion", width=150, anchor="center")
+        tree.column("Telefono", width=150, anchor="center")
+
+
+        # Insertar los autores en el Treeview
+        for usuario in usuarios:
+            tree.insert("", tk.END, values=(usuario[0],usuario[1], usuario[2], usuario[3], usuario[4], usuario[5]))
+
+        # Función para eliminar el usuario seleccionado
+        def eliminar_usuario_seleccionado():
+            # Obtener el id del usuario seleccionado
+            selected_item = tree.selection()
+            if selected_item:
+                id = tree.item(selected_item)["values"][0]
+                confirmacion = messagebox.askyesno("Confirmación",
+                                                   f"¿Estás seguro de que deseas eliminar al usuario con el id:{id}?")
+                if confirmacion:
+                    Usuario.eliminar_usuario(id)
+                    tree.delete(selected_item)
+                    messagebox.showinfo("Éxito", "El usuario ha sido eliminado correctamente.")
+            else:
+                messagebox.showwarning("Selección", "Por favor, selecciona un usuario para eliminar.")
+
+        # Crear el botón de eliminar debajo del Treeview
+        boton_eliminar = tk.Button(ventana_usuarios, text="Eliminar Libro", command=eliminar_usuario_seleccionado,
+                                   width=15, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
+        boton_eliminar.pack(pady=10)
+
+        # Agregar el Treeview al frame
+        tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
 
     # Marco para los botones de "Cancelar" y "Registrar"
     frame_botones = tk.Frame(ventana, bg="#2c3e50")
@@ -163,5 +247,17 @@ def abrir_ventana_registro_usuarios():
         height=2
     )
     boton_registrar.grid(row=0, column=1, padx=10)
+
+    # Botón para consultar autores
+    tk.Button(
+        frame,
+        text="Consultar Usuarios Existentes",
+        command=consultar_usuarios,
+        bg="#005f8b",
+        fg="white",
+        font=("Helvetica", 12),
+        width=25,
+        height=2
+    ).grid(row=14, column=0, columnspan=2, pady=10)
 
     ventana.mainloop()
