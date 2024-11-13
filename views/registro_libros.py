@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from entities.Autor import Autor
 from entities.Libro import Libro
 import re
@@ -207,6 +208,25 @@ def abrir_ventana_registro_libros():
         # Insertar los libros en el Treeview
         for libro in libros:
             tree.insert("", tk.END, values=(libro[0], libro[1], libro[2], libro[3], libro[4], libro[5]))
+
+        # Función para eliminar el libro seleccionado
+        def eliminar_libro_seleccionado():
+            # Obtener el ISBN del libro seleccionado
+            selected_item = tree.selection()
+            if selected_item:
+                isbn = tree.item(selected_item)["values"][0]  # Obtener el ISBN
+                confirmacion = messagebox.askyesno("Confirmación",
+                                                   f"¿Estás seguro de que deseas eliminar el libro con ISBN {isbn}?")
+                if confirmacion:
+                    Libro.eliminar_libro(isbn)
+                    tree.delete(selected_item)
+                    messagebox.showinfo("Éxito", "El libro ha sido eliminado correctamente.")
+            else:
+                messagebox.showwarning("Selección", "Por favor, selecciona un libro para eliminar.")
+
+        boton_eliminar = tk.Button(ventana_libros, text="Eliminar Libro", command=eliminar_libro_seleccionado,
+                                   width=15,height=2,bg="#d9534f", fg="white", font=("Helvetica", 12))
+        boton_eliminar.pack(pady=10)
 
         # Agregar el Treeview a la ventana
         tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)

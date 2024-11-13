@@ -55,6 +55,15 @@ class Libro:
             return None
 
     @staticmethod
+    def obtener_por_isbn(isbn):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM libros WHERE isbn = ?", (isbn,))
+        libro = cursor.fetchone()
+        conn.close()
+        return libro
+
+    @staticmethod
     def actualizar_cantidad_disponible(isbn, cantidad):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
@@ -69,5 +78,13 @@ class Libro:
         cursor = conn.cursor()
         cursor.execute("UPDATE libros SET cantidad_buen_estado = cantidad_buen_estado + ? WHERE isbn = ?",
                        (cantidad, isbn))
+        conn.commit()
+        conn.close()
+
+    @staticmethod
+    def eliminar_libro(isbn):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM libros WHERE isbn = ?", (isbn,))
         conn.commit()
         conn.close()
