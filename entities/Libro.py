@@ -33,6 +33,15 @@ class Libro:
         return libros
 
     @staticmethod
+    def obtener_libros():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT *, titulo FROM libros")
+        libros = cursor.fetchall()
+        conn.close()
+        return libros
+
+    @staticmethod
     def obtener_cantidad_disponible(isbn):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
