@@ -15,14 +15,14 @@ def abrir_ventana_devolucion_libros():
 
     # Obtener préstamos de libros para devolver
     prestamos_pendientes = Prestamo.obtener_prestamos_pendientes()
-    print(prestamos_pendientes)
     lista_prestamos = [f"{prestamo[4]} - {prestamo[5]}" for prestamo in prestamos_pendientes]
 
     # Crear un marco para el formulario
     frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
-    frame.grid(pady=20, row=0, column=0)
+    frame.grid(pady=20, row=0, column=0, sticky="ew")
+    ventana.grid_columnconfigure(0, weight=1)
 
-    tk.Label(frame, text="Devolución de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(
+    tk.Label(frame, text="Préstamo de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(
         row=0, column=0, columnspan=2, pady=10
     )
 
@@ -139,17 +139,34 @@ def abrir_ventana_devolucion_libros():
             combobox_estado.set('')
             ventana.destroy()
 
-    # Botón para registrar devolución
+    # Marco para los botones de "Cancelar" y "Registrar"
+    frame_botones = tk.Frame(ventana, bg="#2c3e50")
+    frame_botones.grid(pady=20)
+
+    # Botón de cancelar a la izquierda
+    boton_cancelar = tk.Button(
+        frame_botones,
+        text="Cancelar",
+        command=ventana.destroy,
+        bg="#d9534f",
+        fg="white",
+        font=("Helvetica", 12),
+        width=15,
+        height=2
+    )
+    boton_cancelar.grid(row=0, column=0, padx=10)
+
+    # Botón de registrar a la derecha
     boton_registrar = tk.Button(
-        ventana,
-        text="Registrar Devolución",
+        frame_botones,
+        text="Registrar Libro",
         command=registrar_devolucion,
         bg="#008B8B",
         fg="white",
-        relief=tk.RAISED,
-        width=25,
+        font=("Helvetica", 12),
+        width=15,
         height=2
     )
-    boton_registrar.grid(row=6, column=0, columnspan=3, pady=20)
+    boton_registrar.grid(row=0, column=1, padx=10)
 
     ventana.mainloop()

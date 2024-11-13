@@ -164,10 +164,10 @@ def abrir_ventana_prestamo_libros():
 
 
             if tipo_usuario == "Estudiante" and libros_prestados >= 3:
-                label_error_libro.config(text="Un estudiante no puede tener más de 3 libros prestados.")
+                label_error_usuario.config(text="Un estudiante no puede tener más de 3 libros prestados.")
                 return
             elif tipo_usuario == "Profesor" and libros_prestados >= 5:
-                label_error_libro.config(text="Un profesor no puede tener más de 5 libros prestados.")
+                label_error_usuario.config(text="Un profesor no puede tener más de 5 libros prestados.")
                 return
 
             # Registrar el préstamo
@@ -187,17 +187,35 @@ def abrir_ventana_prestamo_libros():
             ventana.destroy()
                 
 
-    # Botón para registrar el préstamo
+    # Marco para los botones de "Cancelar" y "Registrar"
+    frame_botones = tk.Frame(ventana, bg="#2c3e50")
+    frame_botones.grid(pady=20)
+
+    # Botón de cancelar a la izquierda
+    boton_cancelar = tk.Button(
+        frame_botones,
+        text="Cancelar",
+        command=ventana.destroy,
+        bg="#d9534f",
+        fg="white",
+        font=("Helvetica", 12),
+        width=15,
+        height=2
+    )
+    boton_cancelar.grid(row=0, column=0, padx=10)
+
+    # Botón de registrar a la derecha
     boton_registrar = tk.Button(
-        ventana,
-        text="Registrar Préstamo",
+        frame_botones,
+        text="Registrar Libro",
         command=registrar_prestamo,
         bg="#008B8B",
         fg="white",
-        relief=tk.RAISED,
-        width=25,
+        font=("Helvetica", 12),
+        width=15,
         height=2
     )
-    boton_registrar.grid(row=9, column=0, columnspan=3, pady=20)
+    boton_registrar.grid(row=0, column=1, padx=10)
+
 
     ventana.mainloop()

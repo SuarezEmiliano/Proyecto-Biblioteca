@@ -338,17 +338,34 @@ def abrir_ventana_reportes():
     ], state="readonly", width=40)
     combobox_reportes.grid(row=1, column=1, pady=5)
 
-    # Botón para generar el reporte
+    # Marco para los botones de "Cancelar" y "Registrar"
+    frame_botones = tk.Frame(ventana, bg="#2c3e50")
+    frame_botones.pack(pady=20)
+
+    # Botón de cancelar a la izquierda
+    boton_cancelar = tk.Button(
+        frame_botones,
+        text="Cancelar",
+        command=ventana.destroy,
+        bg="#d9534f",
+        fg="white",
+        font=("Helvetica", 12),
+        width=15,
+        height=2
+    )
+    boton_cancelar.grid(row=0, column=0, padx=10)
+
+    # Botón de registrar a la derecha
     boton_generar_reporte = tk.Button(
-        ventana,
-        text="Generar Reporte",
+        frame_botones,
+        text="Generar reporte",
         command=generar_reporte,
         bg="#008B8B",
         fg="white",
-        relief=tk.RAISED,
-        width=25,
+        font=("Helvetica", 12),
+        width=15,
         height=2
     )
-    boton_generar_reporte.pack(pady=20)
+    boton_generar_reporte.grid(row=0, column=1, padx=10)
 
     ventana.mainloop()

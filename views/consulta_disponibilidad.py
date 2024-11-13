@@ -50,18 +50,36 @@ def abrir_ventana_consulta_disponibilidad():
         else:
             messagebox.showerror("Error", "El libro no está registrado o no se pudo obtener la cantidad disponible.")
 
-    # Botón para consultar disponibilidad
+
+    # Marco para los botones de "Cancelar" y "Registrar"
+    frame_botones = tk.Frame(ventana, bg="#2c3e50")
+    frame_botones.pack(pady=20)
+
+    # Botón de cancelar a la izquierda
+    boton_cancelar = tk.Button(
+        frame_botones,
+        text="Cancelar",
+        command=ventana.destroy,
+        bg="#d9534f",
+        fg="white",
+        font=("Helvetica", 12),
+        width=15,
+        height=2
+    )
+    boton_cancelar.grid(row=0, column=0, padx=10)
+
+    # Botón de registrar a la derecha
     boton_consultar = tk.Button(
-        ventana,
-        text="Consultar disponibilidad",
+        frame_botones,
+        text="Consultar",
         command=consultar_disponibilidad,
         bg="#008B8B",
         fg="white",
-        relief=tk.RAISED,
-        width=25,
+        font=("Helvetica", 12),
+        width=15,
         height=2
     )
-    boton_consultar.pack(pady=20)
+    boton_consultar.grid(row=0, column=1, padx=10)
 
     def mostrar_disponibilidad(cantidad_disponible):
         confirmacion = tk.Toplevel()
