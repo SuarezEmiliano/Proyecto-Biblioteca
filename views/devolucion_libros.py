@@ -5,7 +5,7 @@ from entities.Libro import Libro
 from entities.Prestamo import Prestamo
 from entities.Usuario import Usuario
 import re
-
+from datetime import datetime
 
 def abrir_ventana_devolucion_libros():
     ventana = tk.Toplevel()
@@ -47,13 +47,6 @@ def abrir_ventana_devolucion_libros():
     label_error_prestamo = tk.Label(frame, text="", fg="red", bg="#34495e")
     label_error_prestamo.grid(row=2, column=1, sticky="w")
 
-    # Campo para la fecha de devolución
-    tk.Label(frame, text="Fecha de Devolución:", bg="#34495e", fg="#ecf0f1").grid(row=3, column=0, sticky="w", padx=5)
-    entry_fecha_devolucion = tk.Entry(frame, width=30, font=("Helvetica", 12))
-    entry_fecha_devolucion.grid(row=3, column=1, pady=5)
-    label_error_fecha_devolucion = tk.Label(frame, text="", fg="red", bg="#34495e")
-    label_error_fecha_devolucion.grid(row=4, column=1, sticky="w")
-
     # Campo estado
     tk.Label(frame, text="Estado:", bg="#34495e", fg="#ecf0f1").grid(row=5, column=0, sticky="w")
     combobox_estado = ttk.Combobox(frame, values=["Buen Estado", "Mal Estado"], state="readonly", width="42")
@@ -61,24 +54,8 @@ def abrir_ventana_devolucion_libros():
     label_error_estado = tk.Label(frame, text="", fg="red", bg="#34495e")
     label_error_estado.grid(row=6, column=1, sticky="w")
 
-    def mostrar_calendario_devolucion():
-        cal_fecha_devolucion = Calendar(frame, selectmode='day', date_pattern='yyyy-mm-dd')
-        cal_fecha_devolucion.grid(row=5, column=1, pady=5)
+    
 
-        def seleccionar_fecha_devolucion(event):
-            entry_fecha_devolucion.delete(0, tk.END)
-            entry_fecha_devolucion.insert(0, cal_fecha_devolucion.get_date())
-            cal_fecha_devolucion.grid_forget()
-
-        cal_fecha_devolucion.bind("<<CalendarSelected>>", seleccionar_fecha_devolucion)
-
-    boton_calendario_devolucion = tk.Button(frame, text="📅", command=mostrar_calendario_devolucion, bg="#16a085",
-                                            fg="white")
-    boton_calendario_devolucion.grid(row=3, column=2, padx=5)
-
-    # Validación de la fecha
-    def validar_fecha(fecha):
-        return bool(re.match(r"\d{4}-\d{2}-\d{2}", fecha))
 
     # Mostrar ventana de confirmación
     def mostrar_confirmacion():
@@ -105,12 +82,11 @@ def abrir_ventana_devolucion_libros():
     # Función para registrar la devolución
     def registrar_devolucion():
         prestamo_seleccionado = combobox_prestamos.get()
-        fecha_devolucion = entry_fecha_devolucion.get()
+        fecha_devolucion = datetime.now().date()
         estado_seleccionado = combobox_estado.get()
 
         # Limpiar mensajes de error
         label_error_prestamo.config(text="")
-        label_error_fecha_devolucion.config(text="")
         label_error_estado.config(text="")
 
         campos_validos = True
@@ -119,12 +95,7 @@ def abrir_ventana_devolucion_libros():
         if not prestamo_seleccionado:
             label_error_prestamo.config(text="Selecciona un préstamo válido.")
             campos_validos = False
-        if not fecha_devolucion:
-            label_error_fecha_devolucion.config(text="Ingresa una fecha de devolución.")
-            campos_validos = False
-        if not validar_fecha(fecha_devolucion):
-            label_error_fecha_devolucion.config(text="La fecha debe ser en formato YYYY-MM-DD.")
-            campos_validos = False
+
         if not estado_seleccionado:
             label_error_estado.config(text="Selecciona el estado del libro.")
             campos_validos = False
@@ -149,7 +120,6 @@ def abrir_ventana_devolucion_libros():
 
             # Limpiar campos
             combobox_prestamos.set('')
-            entry_fecha_devolucion.delete(0, tk.END)
             combobox_estado.set('')
             ventana.destroy()
 
