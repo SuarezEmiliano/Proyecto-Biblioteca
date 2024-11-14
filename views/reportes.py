@@ -143,18 +143,6 @@ def mostrar_grafico2(libros):
 
     mostrar_confirmacion()
 
-def esta_vencido(fecha_devolucion_estimada, fecha_devolucion_real=None):
-    # Convertir las fechas de string a objetos datetime
-    fecha_devolucion_estimada = datetime.strptime(fecha_devolucion_estimada, "%Y-%m-%d")
-
-    if fecha_devolucion_real:
-        # Convertir la fecha real a datetime si se ha proporcionado
-        fecha_devolucion_real = datetime.strptime(fecha_devolucion_real, "%Y-%m-%d")
-        # El préstamo está vencido si la fecha de devolución real es posterior a la estimada
-        return fecha_devolucion_real > fecha_devolucion_estimada
-    else:
-        # Si no se tiene fecha de devolución real, el préstamo está vencido si la estimada ha pasado
-        return fecha_devolucion_estimada < datetime.now()
 
 def generar_pdf_prestamos_vencidos(prestamos):
     # Crear el documento PDF
@@ -213,15 +201,20 @@ def generar_pdf_prestamos_vencidos(prestamos):
         fecha_devolucion_estimada = prestamo[3]
         fecha_devolucion_real = prestamo[4]
 
-        # Verificar si el préstamo está vencido
-        if esta_vencido(fecha_devolucion_estimada, fecha_devolucion_real):
-            # Escribir los datos en la tabla
-            pdf.set_x((210 - (ancho_isbn + ancho_fecha_prestamo + ancho_fecha_devolucion_estimada + ancho_fecha_devolucion_real)) / 2)
-            pdf.cell(ancho_isbn, 10, txt=str(isbn), border=1, align='C')
-            pdf.cell(ancho_fecha_prestamo, 10, txt=fecha_prestamo, border=1, align='C')
-            pdf.cell(ancho_fecha_devolucion_estimada, 10, txt=fecha_devolucion_estimada, border=1, align='C')
-            pdf.cell(ancho_fecha_devolucion_real, 10, txt=fecha_devolucion_real, border=1, align='C')
-            pdf.ln()
+        # Verificar si la fecha de devolución real es None (null)
+        if fecha_devolucion_real is None:
+            fecha_devolucion_real = "No entregado aún"
+
+        # Establecer la posición X para el PDF
+        pdf.set_x((210 - (
+                    ancho_isbn + ancho_fecha_prestamo + ancho_fecha_devolucion_estimada + ancho_fecha_devolucion_real)) / 2)
+
+        # Agregar las celdas al PDF
+        pdf.cell(ancho_isbn, 10, txt=str(isbn), border=1, align='C')
+        pdf.cell(ancho_fecha_prestamo, 10, txt=fecha_prestamo, border=1, align='C')
+        pdf.cell(ancho_fecha_devolucion_estimada, 10, txt=fecha_devolucion_estimada, border=1, align='C')
+        pdf.cell(ancho_fecha_devolucion_real, 10, txt=fecha_devolucion_real, border=1, align='C')
+        pdf.ln()
 
     # Pie de página
     pdf.set_y(-30)
@@ -379,16 +372,6 @@ def abrir_ventana_reportes():
         if reporte_seleccionado == "Prestamos vencidos":
             prestamos = Prestamo.obtener_prestamos_vencidos()
             if prestamos:
-                contenido = [
-                    f"Usuario: {prestamo[0]} | Libro: {prestamo[1]} | Fecha préstamo: {prestamo[2]} | Fecha devolución: {prestamo[3]}"
-                    for prestamo in prestamos
-                ]
-                # Mostrar los resultados en el Listbox
-                for linea in contenido:
-                    listbox_resultados.insert(tk.END, linea)
-                # Mostrar el Listbox ahora que hay datos
-                listbox_resultados.pack()
-                # Generar el PDF para préstamos vencidos
                 generar_pdf_prestamos_vencidos(prestamos)
             else:
                 messagebox.showinfo("Préstamos Vencidos", "No hay prestamos vencidos.")
