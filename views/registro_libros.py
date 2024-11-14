@@ -162,7 +162,7 @@ def abrir_ventana_registro_libros():
         # Crear una nueva ventana para mostrar los libros
         ventana_libros = tk.Toplevel()
         ventana_libros.title("Consulta de libros")
-        ventana_libros.geometry("1200x600+750+240")
+        ventana_libros.geometry("1200x600+500+240")
         ventana_libros.configure(bg="#2c3e50")
 
         # Estilos del Treeview

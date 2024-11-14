@@ -22,7 +22,7 @@ def abrir_ventana_devolucion_libros():
     frame.grid(pady=20, row=0, column=0, sticky="ew")
     ventana.grid_columnconfigure(0, weight=1)
 
-    tk.Label(frame, text="Préstamo de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(
+    tk.Label(frame, text="Devolución de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(
         row=0, column=0, columnspan=2, pady=10
     )
 
@@ -159,7 +159,7 @@ def abrir_ventana_devolucion_libros():
     # Botón de registrar a la derecha
     boton_registrar = tk.Button(
         frame_botones,
-        text="Registrar Libro",
+        text="Registrar Devolución",
         command=registrar_devolucion,
         bg="#008B8B",
         fg="white",

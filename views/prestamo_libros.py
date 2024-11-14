@@ -207,7 +207,7 @@ def abrir_ventana_prestamo_libros():
     # Botón de registrar a la derecha
     boton_registrar = tk.Button(
         frame_botones,
-        text="Registrar Libro",
+        text="Registrar Préstamo",
         command=registrar_prestamo,
         bg="#008B8B",
         fg="white",

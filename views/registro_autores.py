@@ -113,7 +113,7 @@ def abrir_ventana_registro_autores():
         # Crear una nueva ventana para mostrar los libros
         ventana_autores = tk.Toplevel()
         ventana_autores.title("Consulta de autores")
-        ventana_autores.geometry("1200x600+750+240")
+        ventana_autores.geometry("1200x600+500+240")
         ventana_autores.configure(bg="#2c3e50")
 
         # Estilos del Treeview
