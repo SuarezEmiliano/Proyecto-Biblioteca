@@ -33,26 +33,28 @@ def abrir_ventana_devolucion_libros():
 
     # Crear un marco para el formulario
     frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
-    frame.grid(pady=20, row=0, column=0, sticky="ew")
+    frame.grid(pady=20, row=0, column=0, sticky="nsew")
     ventana.grid_columnconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
+    frame.grid_columnconfigure(1, weight=1)
 
     tk.Label(frame, text="Devolución de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(
-        row=0, column=0, columnspan=2, pady=10
+        row=0, column=0, columnspan=2, pady=10, sticky="nsew"
     )
 
     # Combobox para seleccionar préstamo
-    tk.Label(frame, text="Préstamo:", bg="#34495e", fg="#ecf0f1").grid(row=1, column=0, sticky="w")
-    combobox_prestamos = ttk.Combobox(frame, values=lista_prestamos, state="readonly", width="42")
-    combobox_prestamos.grid(row=1, column=1, pady=5)
+    tk.Label(frame, text="Préstamo:", bg="#34495e", fg="#ecf0f1").grid(row=1, column=0, sticky="e", padx=5)
+    combobox_prestamos = ttk.Combobox(frame, values=lista_prestamos, state="readonly", width=42)
+    combobox_prestamos.grid(row=1, column=1, pady=5, sticky="w", padx=5)
     label_error_prestamo = tk.Label(frame, text="", fg="red", bg="#34495e")
-    label_error_prestamo.grid(row=2, column=1, sticky="w")
+    label_error_prestamo.grid(row=2, column=0, columnspan=2, sticky="nsew")
 
     # Campo estado
-    tk.Label(frame, text="Estado:", bg="#34495e", fg="#ecf0f1").grid(row=5, column=0, sticky="w")
-    combobox_estado = ttk.Combobox(frame, values=["Buen Estado", "Mal Estado"], state="readonly", width="42")
-    combobox_estado.grid(row=5, column=1, pady=5)
+    tk.Label(frame, text="Estado:", bg="#34495e", fg="#ecf0f1").grid(row=5, column=0, sticky="e", padx=5)
+    combobox_estado = ttk.Combobox(frame, values=["Buen Estado", "Mal Estado"], state="readonly", width=42)
+    combobox_estado.grid(row=5, column=1, pady=5, sticky="w", padx=5)
     label_error_estado = tk.Label(frame, text="", fg="red", bg="#34495e")
-    label_error_estado.grid(row=6, column=1, sticky="w")
+    label_error_estado.grid(row=6, column=0, columnspan=2, sticky="nsew")
 
     
 
@@ -126,6 +128,7 @@ def abrir_ventana_devolucion_libros():
     # Marco para los botones de "Cancelar" y "Registrar"
     frame_botones = tk.Frame(ventana, bg="#2c3e50")
     frame_botones.grid(pady=20)
+    ventana.grid_columnconfigure(0, weight=1)
 
     # Botón de cancelar a la izquierda
     boton_cancelar = tk.Button(
@@ -140,7 +143,6 @@ def abrir_ventana_devolucion_libros():
     )
     boton_cancelar.grid(row=0, column=0, padx=10)
 
-    # Botón de registrar a la derecha
     boton_registrar = tk.Button(
         frame_botones,
         text="Registrar Devolución",
