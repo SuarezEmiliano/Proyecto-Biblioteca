@@ -5,6 +5,7 @@ from entities.Libro import Libro
 from entities.Prestamo import Prestamo
 from entities.Usuario import Usuario
 import re
+from datetime import datetime
 
 def abrir_ventana_prestamo_libros():
     ventana = tk.Toplevel()
@@ -42,31 +43,35 @@ def abrir_ventana_prestamo_libros():
     label_error_usuario = tk.Label(frame, text="", fg="red", bg="#34495e")
     label_error_usuario.grid(row=4, column=1, sticky="w")
 
-    # Variables para los calendarios
-    cal_fecha_prestamo = None
-    cal_fecha_devolucion = None
+
 
     def mostrar_calendario_prestamo():
-        nonlocal cal_fecha_prestamo
-        if cal_fecha_prestamo is None:
-            cal_fecha_prestamo = Calendar(frame, selectmode='day', date_pattern='yyyy-mm-dd')
-            cal_fecha_prestamo.grid(row=5, column=1, pady=5)
-            def seleccionar_fecha_prestamo(event):
-                entry_fecha_prestamo.delete(0, tk.END)
-                entry_fecha_prestamo.insert(0, cal_fecha_prestamo.get_date())
-                cal_fecha_prestamo.grid_forget()
-            cal_fecha_prestamo.bind("<<CalendarSelected>>", seleccionar_fecha_prestamo)
+        cal_fecha_prestamo = None
+        if cal_fecha_prestamo is not None:
+            cal_fecha_prestamo.grid_forget()  # Oculta el calendario si ya estaba visible
+        cal_fecha_prestamo = Calendar(frame, selectmode='day', date_pattern='yyyy-mm-dd')
+        cal_fecha_prestamo.grid(row=5, column=1, pady=5)
+
+        def seleccionar_fecha_prestamo(event):
+            entry_fecha_prestamo.delete(0, tk.END)
+            entry_fecha_prestamo.insert(0, cal_fecha_prestamo.get_date())
+            cal_fecha_prestamo.grid_forget()  # Oculta el calendario después de seleccionar una fecha
+
+        cal_fecha_prestamo.bind("<<CalendarSelected>>", seleccionar_fecha_prestamo)
 
     def mostrar_calendario_devolucion():
-        nonlocal cal_fecha_devolucion
-        if cal_fecha_devolucion is None:
-            cal_fecha_devolucion = Calendar(frame, selectmode='day', date_pattern='yyyy-mm-dd')
-            cal_fecha_devolucion.grid(row=7, column=1, pady=5)
-            def seleccionar_fecha_devolucion(event):
-                entry_fecha_devolucion.delete(0, tk.END)
-                entry_fecha_devolucion.insert(0, cal_fecha_devolucion.get_date())
-                cal_fecha_devolucion.grid_forget()
-            cal_fecha_devolucion.bind("<<CalendarSelected>>", seleccionar_fecha_devolucion)
+        cal_fecha_devolucion = None
+        if cal_fecha_devolucion is not None:
+            cal_fecha_devolucion.grid_forget()  # Oculta el calendario si ya estaba visible
+        cal_fecha_devolucion = Calendar(frame, selectmode='day', date_pattern='yyyy-mm-dd')
+        cal_fecha_devolucion.grid(row=7, column=1, pady=5)
+
+        def seleccionar_fecha_devolucion(event):
+            entry_fecha_devolucion.delete(0, tk.END)
+            entry_fecha_devolucion.insert(0, cal_fecha_devolucion.get_date())
+            cal_fecha_devolucion.grid_forget()  # Oculta el calendario después de seleccionar una fecha
+
+        cal_fecha_devolucion.bind("<<CalendarSelected>>", seleccionar_fecha_devolucion)
 
     def mostrar_confirmacion():
         confirmacion = tk.Toplevel()
@@ -124,6 +129,7 @@ def abrir_ventana_prestamo_libros():
         label_error_fecha_devolucion.config(text="")
 
         campos_validos = True
+        hoy = datetime.now().date()
 
         # Validación de libro y usuario
         if not libro_seleccionado:
@@ -133,18 +139,21 @@ def abrir_ventana_prestamo_libros():
             label_error_usuario.config(text="Selecciona un usuario válido.")
             campos_validos = False
 
-        if not fecha_prestamo:
-            label_error_fecha_prestamo.config(text="Ingresa una fecha de devolucion con .")
-            campos_validos = False
-        if not fecha_devolucion:
-            label_error_fecha_devolucion.config(text="Ingresa una fecha de devolucion con .")
-            campos_validos = False
-
         if not validar_fecha(fecha_prestamo) or not validar_fecha(fecha_devolucion):
             campos_validos = False
-            label_error_fecha_prestamo.config(text="La fecha de préstamo debe ser en formato YYYY-MM-DD.")
-            label_error_fecha_devolucion.config(text="La fecha de devolución debe ser en formato YYYY-MM-DD.")
+            label_error_fecha_prestamo.config(text="Formato de fecha incorrecto (YYYY-MM-DD).")
+            label_error_fecha_devolucion.config(text="Formato de fecha incorrecto (YYYY-MM-DD).")
             return
+
+        fecha_prestamo_dt = datetime.strptime(fecha_prestamo, "%Y-%m-%d").date()
+        fecha_devolucion_dt = datetime.strptime(fecha_devolucion, "%Y-%m-%d").date()
+
+        if fecha_prestamo_dt < hoy:
+            label_error_fecha_prestamo.config(text="La fecha de préstamo no puede ser anterior a hoy.")
+            campos_validos = False
+        if fecha_devolucion_dt <= fecha_prestamo_dt:
+            label_error_fecha_devolucion.config(text="La fecha de devolución debe ser posterior a la fecha de préstamo.")
+            campos_validos = False
 
         if campos_validos:
             # Obtener código del libro seleccionado
