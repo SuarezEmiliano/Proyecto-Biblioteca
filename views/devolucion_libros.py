@@ -29,7 +29,7 @@ def abrir_ventana_devolucion_libros():
         nombre_libro = libro[1]
 
         # Concatenamos el nombre del usuario con el nombre del libro para cada préstamo
-        lista_prestamos.append(f"{nombre_completo_usuario} - {nombre_libro}")
+        lista_prestamos.append(f"{prestamo[0]} - {nombre_completo_usuario} - {nombre_libro}")
 
     # Crear un marco para el formulario
     frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
