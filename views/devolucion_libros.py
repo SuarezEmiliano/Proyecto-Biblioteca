@@ -14,8 +14,22 @@ def abrir_ventana_devolucion_libros():
     ventana.configure(bg="#2c3e50")
 
     # Obtener préstamos de libros para devolver
-    prestamos_pendientes = Prestamo.obtener_prestamos_pendientes()
-    lista_prestamos = [f"{prestamo[4]} - {prestamo[5]}" for prestamo in prestamos_pendientes]
+    prestamos_pendientes = Prestamo.obtener_prestamos_consulta()
+    lista_prestamos = []
+
+    for prestamo in prestamos_pendientes:
+        id_usuario = prestamo[1]
+        nombre_y_apellido = Usuario.obtener_nombre_apellido(id_usuario)
+        nombre_usuario = nombre_y_apellido[0]
+        apellido_usuario = nombre_y_apellido[1]
+        nombre_completo_usuario = f"{nombre_usuario} {apellido_usuario}"
+
+        isbn = prestamo[2]
+        libro = Libro.obtener_por_isbn(isbn)
+        nombre_libro = libro[1]
+
+        # Concatenamos el nombre del usuario con el nombre del libro para cada préstamo
+        lista_prestamos.append(f"{nombre_completo_usuario} - {nombre_libro}")
 
     # Crear un marco para el formulario
     frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
