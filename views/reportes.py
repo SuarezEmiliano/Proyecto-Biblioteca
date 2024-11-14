@@ -9,8 +9,75 @@ from matplotlib.backends.backend_pdf import PdfPages
 from fpdf import FPDF
 from datetime import datetime
 
-
 def mostrar_grafico(libros):
+    # Convertir los datos en un DataFrame
+    df = pd.DataFrame(libros, columns=["Libro", "Cantidad de préstamos"])
+
+    # Crear el gráfico de barras
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x="Cantidad de préstamos", y="Libro", data=df, palette="Blues_d")
+
+    # Configurar el gráfico
+    plt.title("Libros más prestados el último mes")
+    plt.xlabel("Cantidad de Préstamos")
+    plt.ylabel("Libro")
+
+    # Guardar el gráfico como imagen PNG
+    grafico_filename = "grafico_libros_prestados.png"
+    plt.savefig(grafico_filename)
+    plt.close()
+
+    # Crear el archivo PDF
+    pdf = FPDF()
+    pdf.add_page()
+
+    # Encabezado
+    pdf.set_font("Arial", style='B', size=14)
+    pdf.cell(200, 10, txt="Biblioteca Alejandría", ln=True, align='C')
+    pdf.ln(5)
+
+    # Dibuja la línea debajo del encabezado
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    pdf.ln(10)
+
+    # Título del reporte
+    pdf.set_font("Arial", style='B', size=16)
+    pdf.cell(200, 10, txt="Reporte de Libros Más Prestados el Último Mes", ln=True, align='C')
+    pdf.ln(10)
+
+    # Subtítulo
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Detalle", ln=True, align='L')
+    pdf.ln(5)
+
+    # Agregar el gráfico al PDF (como imagen)
+    pdf.image(grafico_filename, x=10, y=pdf.get_y(), w=180)
+
+    pdf.ln(100)
+
+    # Encabezado de la tabla
+    pdf.set_font("Arial", 'B', 12)
+    pdf.set_fill_color(0, 139, 139)
+    pdf.ln(10)
+    pdf.cell(100, 10, "Título del Libro", 1, 0, 'C', fill=True)
+    pdf.cell(50, 10, "Cantidad de Préstamos", 1, 1, 'C', fill=True)
+
+    # Cuerpo de la tabla
+    pdf.set_font("Arial", size=10)
+    for libro in libros:
+        pdf.cell(100, 10, libro[0], 1, 0, 'C')
+        pdf.cell(50, 10, str(libro[1]), 1, 1, 'C')
+
+    # Guardar el PDF final con gráfico y tabla
+    pdf.output("reporte_libros_prestados_grafico.pdf")
+
+    # Eliminar la imagen temporal
+    import os
+    os.remove(grafico_filename)
+
+    mostrar_confirmacion()
+
+def mostrar_grafico2(libros):
     # Convertir los datos en un DataFrame
     df = pd.DataFrame(libros, columns=["Libro", "Cantidad de préstamos"])
 
@@ -24,7 +91,53 @@ def mostrar_grafico(libros):
     plt.ylabel("Libro")
 
     # Guardar el gráfico como un archivo PDF
-    with PdfPages('reporte_libros_prestados.pdf') as pdf:
+    with PdfPages('reporte_libros_prestados_grafico.pdf') as pdf:
+        pdf.savefig()
+        plt.close()
+
+    # Crear un archivo PDF con una tabla de los libros más prestados
+    pdf = FPDF()
+    pdf.add_page()
+    
+    # Establecer el estilo de fuente para el encabezado
+    pdf.set_font("Arial", style='B', size=14)
+
+    # Encabezado (puedes agregar un logo o un texto adicional aquí si es necesario)
+    pdf.cell(200, 10, txt="Biblioteca Alejandría", ln=True, align='C')
+    pdf.ln(5)
+
+    # Dibuja la línea debajo del encabezado
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+
+    pdf.ln(10)
+
+    # Título del reporte (centrado, en negrita y más grande)
+    pdf.set_font("Arial", style='B', size=16)
+    pdf.cell(200, 10, txt="Reporte de Libros Más Prestados el Último Mes", ln=True, align='C')
+    pdf.ln(10)
+
+    # Subtítulo (en negrita)
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Detalle", ln=True, align='L')
+    pdf.ln(5)
+
+    # Crear los encabezados de la tabla con un formato profesional
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.set_fill_color(0, 139, 139)
+
+    # Encabezado de la tabla
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(100, 10, "Título del Libro", 1, 0, 'C')
+    pdf.cell(50, 10, "Cantidad de Préstamos", 1, 1, 'C')
+    
+    # Cuerpo de la tabla
+    pdf.set_font("Arial", size=10)
+    for libro in libros:
+        pdf.cell(100, 10, libro[0], 1, 0, 'C')
+        pdf.cell(50, 10, str(libro[1]), 1, 1, 'C')
+
+    # Guardar el gráfico como un archivo PDF
+    with PdfPages('reporte_libros_prestados_tabla.pdf') as pdf:
         pdf.savefig()
         plt.close()
 
@@ -283,13 +396,6 @@ def abrir_ventana_reportes():
         elif reporte_seleccionado == "Libros más prestados el último mes":
             libros = Prestamo.obtener_libros_mas_prestados()
             if libros:
-                contenido = [f"Libro: {libro[0]} | Cantidad de préstamos: {libro[1]}" for libro in libros]
-                # Mostrar los resultados en el Listbox
-                for linea in contenido:
-                    listbox_resultados.insert(tk.END, linea)
-                # Mostrar el Listbox ahora que hay datos
-                listbox_resultados.pack()
-                # Mostrar el gráfico de barras y guardarlo como PDF
                 mostrar_grafico(libros)
             else:
                 messagebox.showinfo("Libros más prestados", "No hay datos de libros prestados el último mes.")
