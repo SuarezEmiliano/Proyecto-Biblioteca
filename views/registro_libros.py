@@ -4,6 +4,7 @@ from tkinter import messagebox
 from entities.Autor import Autor
 from entities.Libro import Libro
 import re
+import datetime
 
 def abrir_ventana_registro_libros():
     ventana = tk.Toplevel()
@@ -71,9 +72,22 @@ def abrir_ventana_registro_libros():
 
     def validar_titulo_o_genero(texto):
         return bool(re.fullmatch(r"[A-Za-záéíóúÁÉÍÓÚñÑ ]{1,30}", texto))
-
+    
     def validar_anio(anio):
-        return len(anio) == 4 and anio.isdigit()
+        """Valida que el año sea un número de cuatro dígitos y no sea mayor que el año actual."""
+        anio_actual = datetime.datetime.now().year
+        try:
+            anio = int(anio)
+            if len(str(anio)) != 4:
+                return "Debe ser un año de 4 dígitos"
+            elif anio > anio_actual:
+                return "Debe ser un año menor o igual al actual"
+            elif anio < 1000:
+                return "Debe ser un año mayor a 1000"
+            else:
+                return True
+        except ValueError:
+            return "Debe ser un año de 4 dígitos"
 
     def validar_cantidad(cantidad):
         return cantidad.isdigit() and int(cantidad) >= 1
@@ -125,7 +139,9 @@ def abrir_ventana_registro_libros():
         else:
             label_error_genero.grid_remove()
 
-        if not validar_anio(anio_publicacion):
+        resultado_anio = validar_anio(anio_publicacion)
+        if resultado_anio is not True:
+            label_error_anio.config(text=resultado_anio)
             label_error_anio.grid()
             campos_validos = False
         else:
