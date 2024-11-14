@@ -124,7 +124,6 @@ def generar_pdf_prestamos_vencidos(prestamos):
     pdf.output("reporte_prestamos_vencidos.pdf")
     mostrar_confirmacion()
 
-
 def generar_pdf_usuarios_mas_prestamos(usuarios):
     # Creamos una lista con los usuarios y sus respectivas cantidades de préstamos
     usuarios_con_prestamos = []
@@ -342,7 +341,6 @@ def abrir_ventana_reportes():
     frame_botones = tk.Frame(ventana, bg="#2c3e50")
     frame_botones.pack(pady=20)
 
-    # Botón de cancelar a la izquierda
     boton_cancelar = tk.Button(
         frame_botones,
         text="Cancelar",
@@ -355,7 +353,6 @@ def abrir_ventana_reportes():
     )
     boton_cancelar.grid(row=0, column=0, padx=10)
 
-    # Botón de registrar a la derecha
     boton_generar_reporte = tk.Button(
         frame_botones,
         text="Generar reporte",
