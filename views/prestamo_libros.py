@@ -140,11 +140,13 @@ def abrir_ventana_prestamo_libros():
             label_error_usuario.config(text="Selecciona un usuario válido.")
             campos_validos = False
 
-        if not validar_fecha(fecha_prestamo) or not validar_fecha(fecha_devolucion):
+        if not validar_fecha(fecha_prestamo):
             campos_validos = False
             label_error_fecha_prestamo.config(text="Formato de fecha incorrecto (YYYY-MM-DD).")
+            
+        if not validar_fecha(fecha_devolucion):
             label_error_fecha_devolucion.config(text="Formato de fecha incorrecto (YYYY-MM-DD).")
-            return
+            campos_validos = False
 
         fecha_prestamo_dt = datetime.strptime(fecha_prestamo, "%Y-%m-%d").date()
         fecha_devolucion_dt = datetime.strptime(fecha_devolucion, "%Y-%m-%d").date()
