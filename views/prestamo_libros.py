@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from tkcalendar import Calendar
 from entities.Libro import Libro
 from entities.Prestamo import Prestamo
@@ -195,6 +196,93 @@ def abrir_ventana_prestamo_libros():
             entry_fecha_devolucion.delete(0, tk.END)
             ventana.destroy()
                 
+    def consultar_prestamos():
+        prestamos = Prestamo.obtener_prestamos_consulta()
+
+        # Crear una nueva ventana para mostrar los libros
+        ventana_prestamos = tk.Toplevel()
+        ventana_prestamos.title("Consulta de prestamos")
+        ventana_prestamos.geometry("1200x600+500+240")
+        ventana_prestamos.configure(bg="#2c3e50")
+
+        # Estilos del Treeview
+        estilo = ttk.Style()
+        estilo.configure("Treeview",
+                         background="#34495e",
+                         foreground="white",
+                         fieldbackground="#008B8B",
+                         font=("Helvetica", 10),
+                         rowheight=25)
+
+        estilo.configure("Treeview.Heading",
+                         background="#2c3e50",
+                         foreground="black",
+                         font=("Helvetica", 12, "bold"),
+                         anchor="center")
+
+        estilo.map("Treeview",
+                   background=[('selected', '#16a085')],
+                   foreground=[('selected', 'white')])
+
+        # Crear un frame para contener el Treeview y el botón de eliminar
+        frame_contenedor = tk.Frame(ventana_prestamos, bg="#2c3e50")
+        frame_contenedor.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
+
+        # Crear el Treeview para mostrar los libros
+        tree = ttk.Treeview(frame_contenedor,
+                            columns=("Id Prestamo","Usuario","Libro", "Fecha de prestamo", "Fecha de devolucion"),
+                            show="headings")
+
+        # Definir las columnas y encabezados
+        tree.heading("Id Prestamo", text="Id Prestamo", anchor="center")
+        tree.heading("Usuario", text="Usuario", anchor="center")
+        tree.heading("Libro", text="Libro", anchor="center")
+        tree.heading("Fecha de prestamo", text="Fecha de prestamo", anchor="center")
+        tree.heading("Fecha de devolucion", text="Fecha de devolucion", anchor="center")
+
+        # Definir la alineación de las columnas
+        tree.column("Id Prestamo", width=120, anchor="center")
+        tree.column("Usuario", width=120, anchor="center")
+        tree.column("Libro", width=120, anchor="center")
+        tree.column("Fecha de prestamo", width=250, anchor="center")
+        tree.column("Fecha de devolucion", width=150, anchor="center")
+
+
+        # Insertar los autores en el Treeview
+        for prestamo in prestamos:
+            id_usuario = prestamo[1]
+            nombre_y_apellido = Usuario.obtener_nombre_apellido(id_usuario)
+            nombre_usuario = nombre_y_apellido[0]
+            apellido_usuario = nombre_y_apellido[1]
+
+            isbn = prestamo[2]
+            libro = Libro.obtener_por_isbn(isbn)
+            nombre_libro = libro[0]
+
+            tree.insert("", tk.END, values=(prestamo[0],nombre_usuario,nombre_libro, prestamo[2], prestamo[3]))
+
+        # Función para eliminar el libro seleccionado
+        def eliminar_prestamo_seleccionado():
+            # Obtener el Id del prestamo seleccionado
+            selected_item = tree.selection()
+            if selected_item:
+                id = tree.item(selected_item)["values"][0]  # Obtener el ISBN
+                confirmacion = messagebox.askyesno("Confirmación",
+                                                   f"¿Estás seguro de que deseas eliminar el préstamo con Id {id}?")
+                if confirmacion:
+                    Prestamo.eliminar_prestamo(id)
+                    tree.delete(selected_item)
+                    messagebox.showinfo("Éxito", "El préstamo ha sido eliminado correctamente.")
+            else:
+                messagebox.showwarning("Selección", "Por favor, selecciona un libro para eliminar.")
+
+        # Crear el botón de eliminar debajo del Treeview
+        boton_eliminar = tk.Button(ventana_prestamos, text="Eliminar Prestamo", command=eliminar_prestamo_seleccionado,
+                                   width=15, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
+        boton_eliminar.pack(pady=10)
+
+        # Agregar el Treeview al frame
+        tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
 
     # Marco para los botones de "Cancelar" y "Registrar"
     frame_botones = tk.Frame(ventana, bg="#2c3e50")
@@ -226,5 +314,16 @@ def abrir_ventana_prestamo_libros():
     )
     boton_registrar.grid(row=0, column=1, padx=10)
 
+    # Botón para consultar prestamos
+    tk.Button(
+        frame,
+        text="Consultar Prestamos Existentes",
+        command=consultar_prestamos,
+        bg="#005f8b",
+        fg="white",
+        font=("Helvetica", 12),
+        width=25,
+        height=2
+    ).grid(row=14, column=0, columnspan=2, pady=10)
 
     ventana.mainloop()

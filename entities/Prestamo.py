@@ -28,6 +28,15 @@ class Prestamo:
         conn.close()
         return prestamos
 
+    @staticmethod
+    def obtener_prestamos_consulta():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM prestamos WHERE fecha_devolucion_real IS NULL')
+        prestamos = cursor.fetchall()
+        conn.close()
+        return prestamos
+
     # Función para obtener prestamos vencidos
     @staticmethod
     def obtener_prestamos_vencidos():
@@ -133,3 +142,11 @@ class Prestamo:
         isbn = cursor.fetchone()[0]
         conn.close()
         return isbn
+
+    @staticmethod
+    def eliminar_prestamo(id):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM prestamos WHERE id = ?", (id,))
+        conn.commit()
+        conn.close()
