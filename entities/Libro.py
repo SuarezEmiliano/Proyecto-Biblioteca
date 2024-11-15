@@ -102,3 +102,16 @@ class Libro:
             ''', (isbn,))
         conn.commit()
         conn.close()
+
+    @staticmethod
+    def obtener_libros_disponibles_por_autor(id_autor):
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT isbn, titulo, cantidad_disponible 
+            FROM libros 
+            WHERE cantidad_disponible > 0 AND id_autor = ?
+        ''', (id_autor,))
+        libros = cursor.fetchall()
+        conn.close()
+        return libros
