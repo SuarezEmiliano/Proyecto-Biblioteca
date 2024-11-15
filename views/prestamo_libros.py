@@ -154,8 +154,8 @@ def abrir_ventana_prestamo_libros():
         if fecha_prestamo_dt < hoy:
             label_error_fecha_prestamo.config(text="La fecha de préstamo no puede ser anterior a hoy.")
             campos_validos = False
-        if fecha_devolucion_dt <= fecha_prestamo_dt:
-            label_error_fecha_devolucion.config(text="La fecha de devolución debe ser posterior a la fecha de préstamo.")
+        if fecha_devolucion_dt < fecha_prestamo_dt:
+            label_error_fecha_devolucion.config(text="La fecha de devolución debe ser posterior o igual a la fecha de préstamo.")
             campos_validos = False
 
         if campos_validos:

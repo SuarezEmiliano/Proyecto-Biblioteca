@@ -131,21 +131,17 @@ def generar_pdf_prestamos_vencidos(prestamos):
 
     # Agregar los datos de los préstamos en las filas de la tabla
     for prestamo in prestamos:
-        isbn = prestamo[1]  # Suponiendo que el ISBN está en la posición 1
-        fecha_prestamo = prestamo[2]
-        fecha_devolucion_estimada = prestamo[3]
-        fecha_devolucion_real = prestamo[4]
-
-        # Verificar si la fecha de devolución real es None (null)
-        if fecha_devolucion_real is None:
-            fecha_devolucion_real = "No entregado aún"
+        isbn = str(prestamo[1])  # Convertir a cadena
+        fecha_prestamo = str(prestamo[2])  # Convertir a cadena
+        fecha_devolucion_estimada = str(prestamo[3])  # Convertir a cadena
+        fecha_devolucion_real = str(prestamo[4]) if prestamo[4] is not None else "No entregado aún"  # Convertir a cadena
 
         # Establecer la posición X para el PDF
         pdf.set_x((210 - (
                     ancho_isbn + ancho_fecha_prestamo + ancho_fecha_devolucion_estimada + ancho_fecha_devolucion_real)) / 2)
 
         # Agregar las celdas al PDF
-        pdf.cell(ancho_isbn, 10, txt=str(isbn), border=1, align='C')
+        pdf.cell(ancho_isbn, 10, txt=isbn, border=1, align='C')
         pdf.cell(ancho_fecha_prestamo, 10, txt=fecha_prestamo, border=1, align='C')
         pdf.cell(ancho_fecha_devolucion_estimada, 10, txt=fecha_devolucion_estimada, border=1, align='C')
         pdf.cell(ancho_fecha_devolucion_real, 10, txt=fecha_devolucion_real, border=1, align='C')

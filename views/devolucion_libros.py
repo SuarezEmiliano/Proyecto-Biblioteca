@@ -56,9 +56,6 @@ def abrir_ventana_devolucion_libros():
     label_error_estado = tk.Label(frame, text="", fg="red", bg="#34495e")
     label_error_estado.grid(row=6, column=0, columnspan=2, sticky="nsew")
 
-    
-
-
     # Mostrar ventana de confirmación
     def mostrar_confirmacion():
         confirmacion = tk.Toplevel()
