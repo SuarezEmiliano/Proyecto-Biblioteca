@@ -279,6 +279,66 @@ def abrir_ventana_registro_libros():
         # Agregar el Treeview al frame
         tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
 
+    def consultar_historico():
+        libros = Libro.obtener_libros_historico()
+
+        # Crear una nueva ventana para mostrar los libros
+        ventana_libros = tk.Toplevel()
+        ventana_libros.title("Consulta de libros")
+        ventana_libros.geometry("1200x600+500+240")
+        ventana_libros.configure(bg="#2c3e50")
+
+        # Estilos del Treeview
+        estilo = ttk.Style()
+        estilo.configure("Treeview",
+                         background="#34495e",
+                         foreground="white",
+                         fieldbackground="#008B8B",
+                         font=("Helvetica", 10),
+                         rowheight=25)
+
+        estilo.configure("Treeview.Heading",
+                         background="#2c3e50",
+                         foreground="black",
+                         font=("Helvetica", 12, "bold"),
+                         anchor="center")
+
+        estilo.map("Treeview",
+                   background=[('selected', '#16a085')],
+                   foreground=[('selected', 'white')])
+
+        # Crear un frame para contener el Treeview y el botón de eliminar
+        frame_contenedor = tk.Frame(ventana_libros, bg="#2c3e50")
+        frame_contenedor.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
+
+        # Crear el Treeview para mostrar los libros
+        tree = ttk.Treeview(frame_contenedor,
+                            columns=("ISBN", "Título", "Género", "Año", "Autor", "Cantidad Disponible"),
+                            show="headings")
+
+        # Definir las columnas y encabezados
+        tree.heading("ISBN", text="ISBN", anchor="center")
+        tree.heading("Título", text="Título", anchor="center")
+        tree.heading("Género", text="Género", anchor="center")
+        tree.heading("Año", text="Año", anchor="center")
+        tree.heading("Autor", text="Autor", anchor="center")
+        tree.heading("Cantidad Disponible", text="Cantidad Disponible", anchor="center")
+
+        # Definir la alineación de las columnas
+        tree.column("ISBN", width=120, anchor="center")
+        tree.column("Título", width=250, anchor="center")
+        tree.column("Género", width=150, anchor="center")
+        tree.column("Año", width=100, anchor="center")
+        tree.column("Autor", width=200, anchor="center")
+        tree.column("Cantidad Disponible", width=150, anchor="center")
+
+        # Insertar los libros en el Treeview
+        for libro in libros:
+            tree.insert("", tk.END, values=(libro[0], libro[1], libro[2], libro[3], libro[4], libro[5]))
+
+        # Agregar el Treeview al frame
+        tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
+
     # Marco para los botones de "Cancelar" y "Registrar"
     frame_botones = tk.Frame(ventana, bg="#2c3e50")
     frame_botones.pack(pady=20)
@@ -320,5 +380,17 @@ def abrir_ventana_registro_libros():
         width=25,
         height=2
     ).grid(row=14, column=0, columnspan=2, pady=10)
+
+    # Botón para consultar historico
+    tk.Button(
+        frame,
+        text="Consultar Historico",
+        command=consultar_historico,
+        bg="#005f8b",
+        fg="white",
+        font=("Helvetica", 12),
+        width=25,
+        height=2
+    ).grid(row=15, column=0, columnspan=2, pady=10)
 
     ventana.mainloop()

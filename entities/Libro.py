@@ -43,6 +43,15 @@ class Libro:
         return libros
 
     @staticmethod
+    def obtener_libros_historico():
+        conn = sqlite3.connect('biblioteca.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT *, titulo FROM libros WHERE dado_de_baja = 1")
+        libros = cursor.fetchall()
+        conn.close()
+        return libros
+
+    @staticmethod
     def obtener_cantidad_disponible(isbn):
         conn = sqlite3.connect('biblioteca.db')
         cursor = conn.cursor()
