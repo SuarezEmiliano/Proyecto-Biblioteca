@@ -188,6 +188,7 @@ def abrir_ventana_prestamo_libros():
 
             # Restar 1 a la cantidad disponible del libro
             Libro.actualizar_cantidad_disponible(codigo_libro, -1)
+            Libro.actualizar_cantidad_buen_estado(codigo_libro, -1)
 
             mostrar_confirmacion()
 

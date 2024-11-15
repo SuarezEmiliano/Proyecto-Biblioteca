@@ -51,7 +51,7 @@ class Prestamo:
             SELECT p.id_usuario, l.titulo, p.fecha_prestamo, p.fecha_devolucion_estimada, p.fecha_devolucion_real
             FROM prestamos p
             JOIN libros l ON p.isbn = l.isbn
-            WHERE (p.fecha_devolucion_estimada < ? AND p.fecha_devolucion_real IS NULL) 
+            WHERE (p.fecha_devolucion_estimada < ? AND p.fecha_devolucion_real IS NULL AND l.dado_de_baja = 0) 
             OR (p.fecha_devolucion_real > p.fecha_devolucion_estimada)
         ''', (fecha_actual,))
 
@@ -73,7 +73,7 @@ class Prestamo:
             SELECT l.titulo, COUNT(p.isbn) AS cantidad_prestamos 
             FROM prestamos p
             JOIN libros l ON p.isbn = l.isbn
-            WHERE p.fecha_prestamo >= ?
+            WHERE p.fecha_prestamo >= ? AND dado_de_baja = 0
             GROUP BY p.isbn
             ORDER BY cantidad_prestamos DESC
         ''', (fecha_inicio,))

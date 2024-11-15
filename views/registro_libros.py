@@ -6,6 +6,7 @@ from entities.Libro import Libro
 import re
 import datetime
 
+
 def abrir_ventana_registro_libros():
     ventana = tk.Toplevel()
     ventana.title("Registro de Libros")
@@ -21,7 +22,9 @@ def abrir_ventana_registro_libros():
     frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
     frame.pack(pady=20)
 
-    tk.Label(frame, text="Registro de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(row=0, column=0, columnspan=2, pady=10)
+    tk.Label(frame, text="Registro de Libros", font=("Helvetica", 18), bg="#34495e", fg="#ecf0f1").grid(row=0, column=0,
+                                                                                                        columnspan=2,
+                                                                                                        pady=10)
 
     # Campos de entrada para el formulario
     tk.Label(frame, text="ISBN:", bg="#34495e", fg="#ecf0f1").grid(row=1, column=0, sticky="w")
@@ -53,7 +56,8 @@ def abrir_ventana_registro_libros():
     label_error_anio.grid_remove()
 
     tk.Label(frame, text="Autor:", bg="#34495e", fg="#ecf0f1").grid(row=9, column=0, sticky="w")
-    combobox_autores = ttk.Combobox(frame, values=[f"{autor[0]} - {autor[1]}" for autor in lista_autores], width=28, state="readonly", font=("Helvetica", 12))
+    combobox_autores = ttk.Combobox(frame, values=[f"{autor[0]} - {autor[1]}" for autor in lista_autores], width=28,
+                                    state="readonly", font=("Helvetica", 12))
     combobox_autores.grid(row=9, column=1, pady=5)
     label_error_autor = tk.Label(frame, text="Debe seleccionar un autor", fg="red", bg="#34495e")
     label_error_autor.grid(row=10, column=1, sticky="w")
@@ -72,7 +76,7 @@ def abrir_ventana_registro_libros():
 
     def validar_titulo_o_genero(texto):
         return bool(re.fullmatch(r"[A-Za-záéíóúÁÉÍÓÚñÑ ]{1,30}", texto))
-    
+
     def validar_anio(anio):
         """Valida que el año sea un número de cuatro dígitos y no sea mayor que el año actual."""
         anio_actual = datetime.datetime.now().year
@@ -98,7 +102,8 @@ def abrir_ventana_registro_libros():
         confirmacion.geometry("400x200+750+240")
         confirmacion.configure(bg="#2c3e50")
 
-        tk.Label(confirmacion, text="Libro registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50", fg="#ecf0f1").pack(pady=20)
+        tk.Label(confirmacion, text="Libro registrado con éxito!", font=("Helvetica", 14), bg="#2c3e50",
+                 fg="#ecf0f1").pack(pady=20)
 
         tk.Button(
             confirmacion,
@@ -244,10 +249,32 @@ def abrir_ventana_registro_libros():
             else:
                 messagebox.showwarning("Selección", "Por favor, selecciona un libro para eliminar.")
 
+        def baja_libros_danados():
+            # Obtener el ISBN del libro seleccionado
+            selected_item = tree.selection()
+            if selected_item:
+                isbn = tree.item(selected_item)["values"][0]  # Obtener el ISBN
+                confirmacion = messagebox.askyesno("Confirmación",
+                                                   f"¿Estás seguro de que deseas dar de baja el libro con ISBN {isbn}?")
+                if confirmacion:
+                    Libro.dar_de_baja(isbn)
+                    tree.delete(selected_item)
+                    messagebox.showinfo("Éxito", "El libro ha sido dado de baja correctamente.")
+            else:
+                messagebox.showwarning("Selección", "Por favor, selecciona un libro para dar de baja.")
+
+        # Crear un Frame para centrar los botones
+        frame_botones = tk.Frame(ventana_libros, bg="#2c3e50")
+        frame_botones.pack(pady=10, anchor="center")
+
         # Crear el botón de eliminar debajo del Treeview
-        boton_eliminar = tk.Button(ventana_libros, text="Eliminar Libro", command=eliminar_libro_seleccionado,
-                                   width=15, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
-        boton_eliminar.pack(pady=10)
+        boton_eliminar = tk.Button(frame_botones, text="Eliminar Libros", command=eliminar_libro_seleccionado,
+                                   width=20, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
+        #boton_eliminar.pack(side="left", padx=5)
+
+        boton_baja_danados = tk.Button(frame_botones, text="Dar de baja", command=baja_libros_danados,
+                                       width=15, height=2, bg="#d9534f", fg="white", font=("Helvetica", 12))
+        boton_baja_danados.pack(side="left", padx=5)
 
         # Agregar el Treeview al frame
         tree.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)

@@ -32,6 +32,7 @@ def crear_tablas():
             id_autor INTEGER,
             cantidad_disponible INTEGER,
             cantidad_buen_estado INTEGER,
+            dado_de_baja INTEGER,
             FOREIGN KEY(id_autor) REFERENCES autores(id_autor)
         )
     ''')
