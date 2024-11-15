@@ -1,19 +1,36 @@
 import sqlite3
 
 
-# Conexión a la base de datos (creará el archivo biblioteca.db si no existe)
-def conectar_db():
-    conn = sqlite3.connect('../biblioteca.db')
-    return conn
+class ConexionDB:
+    _instancia = None
+
+    def __new__(cls):
+        # Si no hay una instancia creada, la creamos
+        if cls._instancia is None:
+            cls._instancia = super(ConexionDB, cls).__new__(cls)
+            # Inicializamos la conexión a la base de datos
+            cls._instancia.conn = sqlite3.connect('./biblioteca.db')
+        return cls._instancia
+
+    def obtener_conexion(self):
+        return self._instancia.conn
+
+    def cerrar_conexion(self):
+        if self._instancia.conn:
+            self._instancia.conn.close()
+            self._instancia.conn = None
+            self._instancia = None
 
 
 # Creación de las tablas
 def crear_tablas():
-    conn = conectar_db()
+    # Usamos la instancia única de ConexionDB
+    conexion_db = ConexionDB()
+    conn = conexion_db.obtener_conexion()
     cursor = conn.cursor()
 
     # Tabla de autores
-    cursor.execute('''
+    cursor.execute(''' 
         CREATE TABLE IF NOT EXISTS autores (
             id_autor INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
@@ -65,7 +82,6 @@ def crear_tablas():
 
     # Guardar cambios y cerrar conexión
     conn.commit()
-    conn.close()
     print("Tablas creadas correctamente.")
 
 
