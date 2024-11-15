@@ -44,7 +44,7 @@ def abrir_ventana_registro_libros():
     tk.Label(frame, text="Género:", bg="#34495e", fg="#ecf0f1").grid(row=5, column=0, sticky="w")
     entry_genero = tk.Entry(frame, width=30, font=("Helvetica", 12))
     entry_genero.grid(row=5, column=1, pady=5)
-    label_error_genero = tk.Label(frame, text="Debe ser solo letras (1-20 caracteres)", fg="red", bg="#34495e")
+    label_error_genero = tk.Label(frame, text="Debe ser tener entre (1-20 caracteres)", fg="red", bg="#34495e")
     label_error_genero.grid(row=6, column=1, sticky="w")
     label_error_genero.grid_remove()
 
@@ -75,7 +75,7 @@ def abrir_ventana_registro_libros():
         return len(isbn) == 13 and isbn.isdigit()
 
     def validar_titulo_o_genero(texto):
-        return bool(re.fullmatch(r"[A-Za-záéíóúÁÉÍÓÚñÑ ]{1,30}", texto))
+        return bool(re.fullmatch(r"[A-Za-záéíóúÁÉÍÓÚñÑ0-9 ]{1,60}", texto))
 
     def validar_anio(anio):
         """Valida que el año sea un número de cuatro dígitos y no sea mayor que el año actual."""
@@ -384,7 +384,7 @@ def abrir_ventana_registro_libros():
     # Botón para consultar historico
     tk.Button(
         frame,
-        text="Consultar Historico",
+        text="Consultar Libros dados de baja",
         command=consultar_historico,
         bg="#005f8b",
         fg="white",
