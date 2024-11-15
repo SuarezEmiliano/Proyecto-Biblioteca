@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
+from entities.Autor import Autor
+from entities.Libro import Libro
 from entities.Prestamo import Prestamo
 from entities.Usuario import Usuario
 import seaborn as sns
@@ -76,73 +78,6 @@ def mostrar_grafico(libros):
     os.remove(grafico_filename)
 
     mostrar_confirmacion()
-
-def mostrar_grafico2(libros):
-    # Convertir los datos en un DataFrame
-    df = pd.DataFrame(libros, columns=["Libro", "Cantidad de préstamos"])
-
-    # Crear el gráfico de barras
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x="Cantidad de préstamos", y="Libro", data=df, palette="Blues_d", hue="Libro")
-
-    # Configurar el gráfico
-    plt.title("Libros más prestados el último mes")
-    plt.xlabel("Cantidad de Préstamos")
-    plt.ylabel("Libro")
-
-    # Guardar el gráfico como un archivo PDF
-    with PdfPages('reporte_libros_prestados_grafico.pdf') as pdf:
-        pdf.savefig()
-        plt.close()
-
-    # Crear un archivo PDF con una tabla de los libros más prestados
-    pdf = FPDF()
-    pdf.add_page()
-    
-    # Establecer el estilo de fuente para el encabezado
-    pdf.set_font("Arial", style='B', size=14)
-
-    # Encabezado (puedes agregar un logo o un texto adicional aquí si es necesario)
-    pdf.cell(200, 10, txt="Biblioteca Alejandría", ln=True, align='C')
-    pdf.ln(5)
-
-    # Dibuja la línea debajo del encabezado
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-
-    pdf.ln(10)
-
-    # Título del reporte (centrado, en negrita y más grande)
-    pdf.set_font("Arial", style='B', size=16)
-    pdf.cell(200, 10, txt="Reporte de Libros Más Prestados el Último Mes", ln=True, align='C')
-    pdf.ln(10)
-
-    # Subtítulo (en negrita)
-    pdf.set_font("Arial", style='B', size=12)
-    pdf.cell(200, 10, txt="Detalle", ln=True, align='L')
-    pdf.ln(5)
-
-    # Crear los encabezados de la tabla con un formato profesional
-    pdf.set_font("Arial", style='B', size=12)
-    pdf.set_fill_color(0, 139, 139)
-
-    # Encabezado de la tabla
-    pdf.set_font("Arial", 'B', 12)
-    pdf.cell(100, 10, "Título del Libro", 1, 0, 'C')
-    pdf.cell(50, 10, "Cantidad de Préstamos", 1, 1, 'C')
-    
-    # Cuerpo de la tabla
-    pdf.set_font("Arial", size=10)
-    for libro in libros:
-        pdf.cell(100, 10, libro[0], 1, 0, 'C')
-        pdf.cell(50, 10, str(libro[1]), 1, 1, 'C')
-
-    # Guardar el gráfico como un archivo PDF
-    with PdfPages('reporte_libros_prestados_tabla.pdf') as pdf:
-        pdf.savefig()
-        plt.close()
-
-    mostrar_confirmacion()
-
 
 def generar_pdf_prestamos_vencidos(prestamos):
     # Crear el documento PDF
@@ -322,6 +257,102 @@ def generar_pdf_usuarios_mas_prestamos(usuarios):
     pdf.output("reporte_usuarios_mas_prestamos.pdf")
     mostrar_confirmacion()
 
+def generar_pdf_autores_libros_disponibilidad(autores_libros):
+    """Genera un reporte en PDF con la lista de autores, libros y su disponibilidad."""
+    # Crear el documento PDF
+    pdf = FPDF()
+    pdf.add_page()
+
+    # Establecer el estilo de fuente para el encabezado
+    pdf.set_font("Arial", style='B', size=14)
+
+    # Encabezado (puedes agregar un logo o un texto adicional aquí si es necesario)
+    pdf.cell(200, 10, txt="Biblioteca Alejandría", ln=True, align='C')
+    pdf.ln(5)
+
+    # Dibuja la línea debajo del encabezado
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+
+    pdf.ln(10)
+
+    # Título del reporte (centrado, en negrita y más grande)
+    pdf.set_font("Arial", style='B', size=16)
+    pdf.cell(200, 10, txt="Reporte de Autores, Libros y Disponibilidad", ln=True, align='C')
+    pdf.ln(10)
+
+    # Subtítulo (en negrita)
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Detalle", ln=True, align='L')
+    pdf.ln(5)
+
+    # Crear los encabezados de la tabla con un formato profesional
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.set_fill_color(0, 139, 139)
+
+    # Definir el ancho de las celdas
+    ancho_autor = 60
+    ancho_libro = 80 
+    ancho_disponibilidad = 50
+
+    # Calcular el centro de la página para la tabla
+    pdf.set_x((210 - (ancho_autor + ancho_libro + ancho_disponibilidad)) / 2)
+
+    # Encabezados de la tabla
+    pdf.cell(ancho_autor, 10, txt="Autor", border=1, align='C', fill=True)
+    pdf.cell(ancho_libro, 10, txt="Libro", border=1, align='C', fill=True)
+    pdf.cell(ancho_disponibilidad, 10, txt="Disponibilidad", border=1, align='C', fill=True)
+    pdf.ln()
+
+    # Cambiar a una fuente normal para los datos
+    pdf.set_font("Arial", size=10)
+
+    # Agregar los datos de los autores, libros y su disponibilidad en las filas de la tabla
+    for item in autores_libros:
+        pdf.cell(ancho_autor, 10, txt=item['autor'], border=1, align='C')
+        pdf.cell(ancho_libro, 10, txt=item['libro'], border=1, align='C')
+        pdf.cell(ancho_disponibilidad, 10, txt=item['disponibilidad'], border=1, align='C')
+        pdf.ln()
+
+    # Agregar pie de página
+    pdf.set_y(-30)
+    pdf.set_font("Arial", style='I', size=8)
+    pdf.cell(0, 10, txt=f"Fecha de generación: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", ln=True, align='C')
+    pdf.cell(0, 10, txt="Reporte generado automáticamente. Todos los derechos reservados.", align='C')
+
+    # Guardar el archivo PDF
+    nombre_archivo = f"reporte_autores_libros_disponibilidad_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    pdf.output(nombre_archivo)
+    
+    # Mostrar confirmación
+    mostrar_confirmacion()
+
+def obtener_autores_y_libros_disponibles():
+    # Obtener todos los autores
+    autores = Autor.obtener_autores()
+    
+    # Crear una lista para almacenar los resultados
+    autores_y_libros_disponibles = []
+
+    # Para cada autor, obtener los libros disponibles para ese autor
+    for autor in autores:
+        id_autor, nombre_autor = autor
+        
+        # Obtener los libros disponibles para este autor
+        libros = Libro.obtener_libros_disponibles_por_autor(id_autor)
+        
+        # Si el autor tiene libros disponibles
+        if libros:
+            for libro in libros:
+                isbn, titulo, cantidad_disponible = libro
+                
+                # Almacenar el resultado en la lista con las claves correctas
+                autores_y_libros_disponibles.append({
+                    "autor": nombre_autor,
+                    "libro": titulo,  # Nombre del libro
+                    "disponibilidad": str(cantidad_disponible)  # Disponibilidad del libro
+                })
+    return autores_y_libros_disponibles
+
 def mostrar_confirmacion():
     confirmacion = tk.Toplevel()
     confirmacion.title("Confirmación")
@@ -399,20 +430,19 @@ def abrir_ventana_reportes():
                 usuarios_con_prestamos.append((nombre_usuario, apellido_usuario, cantidad_prestamos))
             usuarios_con_prestamos.sort(key=lambda x: x[2], reverse=True)
             if usuarios_con_prestamos:
-                contenido = [
-                    f"Usuario: {usuario[0]} {usuario[1]} | Cantidad de préstamos: {usuario[2]}"
-                    for usuario in usuarios_con_prestamos
-                ]
-                # Mostrar los resultados en el Listbox
-                for linea in contenido:
-                    listbox_resultados.insert(tk.END, linea)
-                # Mostrar el Listbox ahora que hay datos
-                listbox_resultados.pack()
-
                 # Generar el PDF para los usuarios con más préstamos
                 generar_pdf_usuarios_mas_prestamos(usuarios_con_prestamos)
             else:
                 messagebox.showinfo("Usuarios con más préstamos", "No hay usuarios con préstamos registrados.")
+
+        elif reporte_seleccionado == "Autores y Libros Disponibles":
+            # Aquí asumimos que se obtiene una lista de autores, libros y su disponibilidad.
+            autores_libros = obtener_autores_y_libros_disponibles()
+            if autores_libros:
+                # Llamamos a la función para generar el PDF con los autores, libros y disponibilidad
+                generar_pdf_autores_libros_disponibilidad(autores_libros)
+            else:
+                messagebox.showinfo("Autores y Libros Disponibles", "No hay libros disponibles en este momento.")
 
         else:
             messagebox.showwarning("Advertencia", "Por favor, selecciona un reporte.")
@@ -422,7 +452,8 @@ def abrir_ventana_reportes():
     combobox_reportes = ttk.Combobox(frame, values=[
         "Prestamos vencidos",
         "Libros más prestados el último mes",
-        "Usuarios con más préstamos de libros"
+        "Usuarios con más préstamos de libros",
+        "Autores y Libros Disponibles"
     ], state="readonly", width=40)
     combobox_reportes.grid(row=1, column=1, pady=5)
 
