@@ -19,10 +19,10 @@ class Libro:
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO libros (isbn, titulo, genero, anio_publicacion, 
-                id_autor, cantidad_disponible, cantidad_buen_estado) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+                id_autor, cantidad_disponible, cantidad_buen_estado, dado_de_baja) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', (self.isbn, self.titulo, self.genero, self.anio_publicacion,
-              self.id_autor, self.cantidad_disponible, self.cantidad_buen_estado))
+              self.id_autor, self.cantidad_disponible, self.cantidad_buen_estado, self.dado_de_baja))
         conn.commit()
 
     @staticmethod

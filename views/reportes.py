@@ -320,7 +320,7 @@ def generar_pdf_autores_libros_disponibilidad(autores_libros):
     pdf.cell(0, 10, txt="Reporte generado automáticamente. Todos los derechos reservados.", align='C')
 
     # Guardar el archivo PDF
-    nombre_archivo = f"reporte_autores_libros_disponibilidad_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    nombre_archivo = f"reporte_autores_libros_disponibilidad.pdf"
     pdf.output(nombre_archivo)
     
     # Mostrar confirmación
